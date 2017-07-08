@@ -1,0 +1,11 @@
+# python
+__pycache__/
+.pyc
+
+# ide
+.idea/
+
+# project
+checkpoints/
+tensorboard/
+main.log*
