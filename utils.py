@@ -1,3 +1,4 @@
+import os
 import random
 import string
 
@@ -6,6 +7,27 @@ import numpy as np
 from logger import get_logger
 
 logger = get_logger(__name__)
+
+
+def make_dirs(path, empty=False):
+    """
+    create dir in path or clear dir if exists
+    """
+    dir_path = os.path.dirname(path)
+    os.makedirs(dir_path, exist_ok=True)
+
+    if empty:
+        files = [os.path.join(dir_path, item) for item in os.listdir(dir_path)]
+        for item in files:
+            if os.path.isfile(item):
+                os.remove(item)
+
+    return dir_path
+
+
+###
+# data processing
+###
 
 
 def create_dictionary():
@@ -37,7 +59,11 @@ def decode_text(int_array):
     return "".join((ID2CHAR[ch] for ch in int_array))
 
 
-def training_batch_generator(text, batch_size=64, seq_len=64):
+def one_hot_encode(indices, num_classes):
+    return np.eye(num_classes)[indices]
+
+
+def batch_generator(text, batch_size=64, seq_len=64, one_hot=False):
     """
     batch generator for training text
     ensures that batches generated are continuous along axis 1
@@ -46,30 +72,31 @@ def training_batch_generator(text, batch_size=64, seq_len=64):
     encoded = encode_text(text)
 
     # prediction is on next step, hence use (len - 1)
-    nb_batches = (len(encoded) - 1) // (batch_size * seq_len)
-    logger.info("number of batches: %s.", nb_batches)
-    rounded_len = nb_batches * batch_size * seq_len
+    num_batches = (len(encoded) - 1) // (batch_size * seq_len)
+    logger.info("number of batches: %s.", num_batches)
+    rounded_len = num_batches * batch_size * seq_len
     logger.info("effective text length: %s.", rounded_len)
 
-    x = np.reshape(encoded[: rounded_len], [batch_size, nb_batches * seq_len])
+    x = np.reshape(encoded[: rounded_len], [batch_size, num_batches * seq_len])
     logger.info("x shape: %s.", x.shape)
-    y = np.reshape(encoded[1: rounded_len + 1], [batch_size, nb_batches * seq_len])
-    # one hot encoding for y
-    y = np.eye(VOCAB_SIZE)[y]
+    y = np.reshape(encoded[1: rounded_len + 1], [batch_size, num_batches * seq_len])
+    if one_hot:
+        y = one_hot_encode(y, VOCAB_SIZE)
     logger.info("y shape: %s.", y.shape)
 
     epoch = 0
     while True:
         # roll so that no need to reset rnn states over epochs
-        x_epoch = np.roll(x, -epoch, axis=0)
-        y_epoch = np.roll(y, -epoch, axis=0)
-
-        for batch in range(nb_batches):
-            x_batch = x_epoch[:, batch * seq_len: (batch + 1) * seq_len]
-            y_batch = y_epoch[:, batch * seq_len: (batch + 1) * seq_len, :]
-            yield x_batch, y_batch
-
+        x_epoch = np.split(np.roll(x, -epoch, axis=0), num_batches, axis=1)
+        y_epoch = np.split(np.roll(y, -epoch, axis=0), num_batches, axis=1)
+        for batch in range(num_batches):
+            yield x_epoch[batch], y_epoch[batch]
         epoch += 1
+
+
+###
+# text generation
+###
 
 
 def generate_seed(text, seq_lens=(2, 4, 8, 16, 32)):
@@ -82,14 +109,15 @@ def generate_seed(text, seq_lens=(2, 4, 8, 16, 32)):
     return seed
 
 
-def sample_from_probs(probs, top_n=10):
+def sample_from_probs(probs, top_n=10, log=False):
     """
     truncated weighted random choice.
     """
     # helper function to sample an index from a probability array
     probs = np.array(probs, dtype=float)
-    # top 5 probs to log
-    # top_probs(probs)
+    if log:
+        # top 5 probs to log
+        top_probs(probs)
     probs[np.argsort(probs)[:-top_n]] = 0
     probs /= np.sum(probs)
     sampled_index = np.random.choice(len(probs), p=probs)
