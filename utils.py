@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 def make_dirs(path, empty=False):
     """
-    create dir in path or clear dir if exists
+    create dir in path and clear dir if required
     """
     dir_path = os.path.dirname(path)
     os.makedirs(dir_path, exist_ok=True)
@@ -60,27 +60,33 @@ def decode_text(int_array):
 
 
 def one_hot_encode(indices, num_classes):
+    """
+    one-hot encoding
+    """
     return np.eye(num_classes)[indices]
 
 
-def batch_generator(text, batch_size=64, seq_len=64, one_hot=False):
+def batch_generator(sequence, batch_size=64, seq_len=64, one_hot_features=False, one_hot_labels=False):
     """
-    batch generator for training text
+    batch generator for sequence
     ensures that batches generated are continuous along axis 1
     so that hidden states can be kept across batches and epochs
     """
-    encoded = encode_text(text)
-
-    # prediction is on next step, hence use (len - 1)
-    num_batches = (len(encoded) - 1) // (batch_size * seq_len)
+    # calculate effective length of text to use
+    num_batches = (len(sequence) - 1) // (batch_size * seq_len)
+    if num_batches == 0:
+        raise ValueError("No batches created. Use smaller batch size or sequence length.")
     logger.info("number of batches: %s.", num_batches)
     rounded_len = num_batches * batch_size * seq_len
     logger.info("effective text length: %s.", rounded_len)
 
-    x = np.reshape(encoded[: rounded_len], [batch_size, num_batches * seq_len])
+    x = np.reshape(sequence[: rounded_len], [batch_size, num_batches * seq_len])
+    if one_hot_features:
+        x = one_hot_encode(x, VOCAB_SIZE)
     logger.info("x shape: %s.", x.shape)
-    y = np.reshape(encoded[1: rounded_len + 1], [batch_size, num_batches * seq_len])
-    if one_hot:
+
+    y = np.reshape(sequence[1: rounded_len + 1], [batch_size, num_batches * seq_len])
+    if one_hot_labels:
         y = one_hot_encode(y, VOCAB_SIZE)
     logger.info("y shape: %s.", y.shape)
 
@@ -103,33 +109,23 @@ def generate_seed(text, seq_lens=(2, 4, 8, 16, 32)):
     """
     select subsequence randomly from input text
     """
+    # randomly choose sequence length
     seq_len = random.choice(seq_lens)
+    # randomly choose start index
     start_index = random.randint(0, len(text) - seq_len - 1)
     seed = text[start_index: start_index + seq_len]
     return seed
 
 
-def sample_from_probs(probs, top_n=10, log=False):
+def sample_from_probs(probs, top_n=10):
     """
     truncated weighted random choice.
     """
-    # helper function to sample an index from a probability array
-    probs = np.array(probs, dtype=float)
-    if log:
-        # top 5 probs to log
-        top_probs(probs)
+    # need 64 floating point precision
+    probs = np.array(probs, dtype=np.float64)
+    # set probabilities after top_n to 0
     probs[np.argsort(probs)[:-top_n]] = 0
+    # renormalise probabilities
     probs /= np.sum(probs)
     sampled_index = np.random.choice(len(probs), p=probs)
     return sampled_index
-
-
-def top_probs(probs, n=5):
-    """
-    get top 5 probabilities and their respective indexes
-    for logging purposes
-    """
-    order = np.argsort(probs)[::-1]
-    top = [(i, probs[i]) for i in order[:n]]
-    logger.debug("top %s probs: %s.", n, [(i, "{0:.3g}".format(p)) for i, p in top])
-    return top

@@ -1,9 +1,9 @@
 import logging
 from logging.handlers import RotatingFileHandler
-from os import path
+import os
 
 
-def get_logger(name, log_path=path.join(path.dirname(__file__), "main.log"), console=False):
+def get_logger(name, log_path=os.path.join(os.path.dirname(__file__), "main.log"), console=False):
     """
     Simple logging wrapper that returns logger
     configured to log into file and console.
@@ -39,5 +39,8 @@ def get_logger(name, log_path=path.join(path.dirname(__file__), "main.log"), con
         ch.setLevel(logging.INFO)
         ch.setFormatter(formatter)
         logger.addHandler(ch)
+
+    if len(logger.handlers) == 0:
+        logger.addHandler(logging.NullHandler())
 
     return logger

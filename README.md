@@ -4,6 +4,16 @@ Inspired by Andrej Karpathy's [The Unreasonable Effectiveness of Recurrent Neura
 
 This repository attempts to replicate the models, with slight modifications, in different python deep learning frameworks.
 
+## Frameworks
+
+- [Keras](#keras)
+- [Tensorflow](#tensorflow)
+- PyTorch
+- Caffe
+- MXNet
+- CNTK
+- Chainer
+
 ## Default Model Specification
 
 | Layer Type | Output Shape  | Param # | Remarks                            |
@@ -28,6 +38,7 @@ This repository attempts to replicate the models, with slight modifications, in 
 ### Training
 
 Usage:
+
 ```
 usage: keras_model.py train [-h] --text-path TEXT_PATH --checkpoint-path
                             CHECKPOINT_PATH [--restore [RESTORE]]
@@ -65,6 +76,7 @@ optional arguments:
 ```
 
 Example:
+
 ```bash
 python keras_model.py train \
     --text-path=data/tinyshakespeare.txt \
@@ -74,6 +86,7 @@ python keras_model.py train \
 ### Text Generation
 
 Usage:
+
 ```
 usage: keras_model.py generate [-h] --checkpoint-path CHECKPOINT_PATH
                                --text-path TEXT_PATH [--seed SEED]
@@ -90,8 +103,31 @@ optional arguments:
 ```
 
 Example:
+
 ```bash
 python keras_model.py generate \
     --text-path=data/tinyshakespeare.txt \
     --checkpoint-path=checkpoints/keras_tinyshakespeare/model.hdf5
+```
+
+## Tensorflow
+
+### Training
+
+Example:
+
+```bash
+python tf_model.py train \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt
+```
+
+### Text Generation
+
+Example:
+
+```bash
+python tf_model.py generate \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt
 ```

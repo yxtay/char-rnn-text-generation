@@ -3,6 +3,7 @@ import sys
 import time
 
 import numpy as np
+
 from keras.callbacks import Callback, ModelCheckpoint, TensorBoard
 from keras.layers import Dense, Dropout, Embedding, LSTM, TimeDistributed
 from keras.models import load_model, Sequential
@@ -15,10 +16,8 @@ from utils import (make_dirs, encode_text, generate_seed, ID2CHAR,
 logger = get_logger(__name__)
 
 
-def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE,
-                embedding_size=32, rnn_size=128,
-                num_layers=2, drop_rate=0.0,
-                learning_rate=0.001):
+def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
+                rnn_size=128, num_layers=2, drop_rate=0.0, learning_rate=0.001):
     """
     build character embedding LSTM text generation model.
     """
@@ -39,7 +38,7 @@ def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE,
     # shape: (batch_size, seq_len, rnn_size)
     model.add(TimeDistributed(Dense(vocab_size, activation="softmax")))
     # output shape: (batch_size, seq_len, vocab_size)
-    optimizer = Nadam(learning_rate)
+    optimizer = Nadam(learning_rate)  # TODO: add clipnorm when it handles embeddings
     model.compile(loss="categorical_crossentropy", optimizer=optimizer)
     return model
 
@@ -51,7 +50,7 @@ def build_inference_model(model, batch_size=1, seq_len=1):
     """
     logger.info("building inference model.")
     config = model.get_config()
-    # change input shape, (batch_size, input_length) = (1, 1)
+    # edit batch_size and seq_len
     config[0]["config"]["batch_input_shape"] = (batch_size, seq_len)
     inference_model = Sequential.from_config(config)
     inference_model.trainable = False
@@ -70,21 +69,20 @@ def generate_text(model, seed, length=512, top_n=10):
     model.reset_states()
 
     for idx in encoded[:-1]:
-        # input shape: (1, 1)
         x = np.array([[idx]])
+        # input shape: (1, 1)
         # set internal states
         model.predict(x)
 
     next_index = encoded[-1]
     for i in range(length):
-        # input shape: (1, 1)
         x = np.array([[next_index]])
-        # output shape: (1, 1, VOCAB_SIZE)
-        probs = model.predict(x)[0, 0, :]
-        next_index = sample_from_probs(probs, top_n)
-        next_char = ID2CHAR[next_index]
+        # input shape: (1, 1)
+        probs = model.predict(x)
+        # output shape: (1, 1, vocab_size)
+        next_index = sample_from_probs(probs.squeeze(), top_n)
         # append to sequence
-        generated += next_char
+        generated += ID2CHAR[next_index]
 
     logger.info("generated text: \n%s\n", generated)
     return generated
@@ -100,8 +98,7 @@ class LoggerCallback(Callback):
         self.text = text
         # build inference model using config from learning model
         self.inference_model = build_inference_model(model)
-        self.time_train = time.time()
-        self.time_epoch = time.time()
+        self.time_train = self.time_epoch = time.time()
 
     def on_epoch_begin(self, epoch, logs=None):
         self.time_epoch = time.time()
@@ -118,7 +115,7 @@ class LoggerCallback(Callback):
         generate_text(self.inference_model, seed)
 
     def on_train_begin(self, logs=None):
-        logger.info("training started.")
+        logger.info("start of training.")
         self.time_train = time.time()
 
     def on_train_end(self, logs=None):
@@ -157,8 +154,11 @@ def train_main(args):
                             drop_rate=args.drop_rate,
                             learning_rate=args.learning_rate)
 
-    # callbacks
+    # make and clear checkpoint directory
     log_dir = make_dirs(args.checkpoint_path, empty=True)
+    model.save(args.checkpoint_path)
+    logger.info("model saved: %s.", args.checkpoint_path)
+    # callbacks
     callbacks = [
         ModelCheckpoint(args.checkpoint_path, verbose=1, save_best_only=False),
         TensorBoard(log_dir),
@@ -167,7 +167,8 @@ def train_main(args):
 
     # train the model
     num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
-    model.fit_generator(batch_generator(text, args.batch_size, args.seq_len, one_hot=True),
+    model.reset_states()
+    model.fit_generator(batch_generator(encode_text(text), args.batch_size, args.seq_len, one_hot_labels=True),
                         num_batches, args.num_epochs, callbacks=callbacks)
     return model
 
@@ -225,6 +226,8 @@ if __name__ == "__main__":
                               help="dropout rate for rnn layers")
     train_parser.add_argument("--learning-rate", type=float, default=0.001,
                               help="learning rate")
+    train_parser.add_argument("--clip-norm", type=float, default=5.,
+                              help="max norm to clip gradient")
     train_parser.add_argument("--batch-size", type=int, default=64,
                               help="training batch size")
     train_parser.add_argument("--num-epochs", type=int, default=32,
