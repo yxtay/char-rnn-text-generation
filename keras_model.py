@@ -165,7 +165,7 @@ def train_main(args):
         LoggerCallback(text, model)
     ]
 
-    # train the model
+    # training start
     num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
     model.reset_states()
     model.fit_generator(batch_generator(encode_text(text), args.batch_size, args.seq_len, one_hot_labels=True),

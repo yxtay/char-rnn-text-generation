@@ -1,6 +1,7 @@
 # Character Embedding Recurrent Neural Network Text Generation Models
 
-Inspired by Andrej Karpathy's [The Unreasonable Effectiveness of Recurrent Neural Networks](https://karpathy.github.io/2015/05/21/rnn-effectiveness/).
+Inspired by [Andrej Karpathy](https://github.com/karpathy/)'s 
+[The Unreasonable Effectiveness of Recurrent Neural Networks](https://karpathy.github.io/2015/05/21/rnn-effectiveness/).
 
 This repository attempts to replicate the models, with slight modifications, in different python deep learning frameworks.
 
@@ -8,7 +9,7 @@ This repository attempts to replicate the models, with slight modifications, in 
 
 - [Keras](#keras)
 - [Tensorflow](#tensorflow)
-- PyTorch
+- [PyTorch](#pytorch)
 - Caffe
 - MXNet
 - CNTK
@@ -32,6 +33,7 @@ This repository attempts to replicate the models, with slight modifications, in 
 - Sequence length: 64
 - Number of epochs: 32
 - Learning rate: 0.001
+- Max gradient norm: 5.0
 
 ## Keras
 
@@ -47,7 +49,7 @@ usage: keras_model.py train [-h] --text-path TEXT_PATH --checkpoint-path
                             [--rnn-size RNN_SIZE] [--num-layers NUM_LAYERS]
                             [--drop-rate DROP_RATE]
                             [--learning-rate LEARNING_RATE]
-                            [--batch-size BATCH_SIZE]
+                            [--clip-norm CLIP_NORM] [--batch-size BATCH_SIZE]
                             [--num-epochs NUM_EPOCHS]
 
 optional arguments:
@@ -69,6 +71,8 @@ optional arguments:
                         dropout rate for rnn layers
   --learning-rate LEARNING_RATE
                         learning rate
+  --clip-norm CLIP_NORM
+                        max norm to clip gradient
   --batch-size BATCH_SIZE
                         training batch size
   --num-epochs NUM_EPOCHS
@@ -130,4 +134,26 @@ Example:
 python tf_model.py generate \
     --text-path=data/tinyshakespeare.txt \
     --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt
+```
+
+## PyTorch
+
+### Training
+
+Example:
+
+```bash
+python pytorch_model.py train \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/pytorch_tinyshakespeare/model.ckpt
+```
+
+### Text Generation
+
+Example:
+
+```bash
+python pytorch_model.py generate \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/pytorch_tinyshakespeare/model.ckpt
 ```
