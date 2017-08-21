@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
                 rnn_size=128, num_layers=2, drop_rate=0.0, learning_rate=0.001):
     """
-    build character embedding LSTM text generation model.
+    build character embeddings LSTM text generation model.
     """
     logger.info("building model: batch_size=%s, seq_len=%s, vocab_size=%s, "
                 "embedding_size=%s, rnn_size=%s, num_layers=%s, drop_rate=%s, "

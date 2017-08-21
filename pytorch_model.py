@@ -17,9 +17,12 @@ logger = get_logger(__name__)
 
 
 class Model(nn.Module):
+    """
+    build character embeddings LSTM text generation model.
+    """
     def __init__(self, vocab_size=VOCAB_SIZE, embedding_size=32,
                  rnn_size=128, num_layers=2, drop_rate=0.0):
-        super().__init__()
+        super(Model, self).__init__()
         self.args = {"vocab_size": vocab_size, "embedding_size": embedding_size,
                      "rnn_size": rnn_size, "num_layers": num_layers,
                      "drop_rate": drop_rate}
@@ -29,6 +32,7 @@ class Model(nn.Module):
         self.decoder = nn.Linear(rnn_size, vocab_size)
 
     def forward(self, input, hidden):
+        # input shape: [seq_len, batch_size]
         embed_seq = self.dropout(self.encoder(input))
         # shape: [seq_len, batch_size, embedding_size]
         rnn_out, hidden = self.rnn(embed_seq, hidden)
@@ -37,17 +41,18 @@ class Model(nn.Module):
         rnn_out = self.dropout(rnn_out)
         # shape: [seq_len, batch_size, rnn_size]
         logits = self.decoder(rnn_out.view(-1, rnn_out.size(2)))
-        # shape: [seq_len * batch_size, vocab_size]
+        # output shape: [seq_len * batch_size, vocab_size]
         return logits, hidden
 
     def predict(self, input, hidden):
+        # input shape: [seq_len, batch_size]
         logits, hidden = self.forward(input, hidden)
         # logits shape: [seq_len * batch_size, vocab_size]
         # hidden shape: [2, num_layers, batch_size, rnn_size]
         probs = F.softmax(logits)
         # shape: [seq_len * batch_size, vocab_size]
         probs = probs.view(input.size(0), input.size(1), probs.size(1))
-        # shape: [seq_len, batch_size, vocab_size]
+        # output shape: [seq_len, batch_size, vocab_size]
         return probs, hidden
 
     def init_hidden(self, batch_size=1):
@@ -61,6 +66,7 @@ class Model(nn.Module):
         checkpoint = {"args": self.args, "state_dict": self.state_dict()}
         with open(checkpoint_path, "wb") as f:
             torch.save(checkpoint, f)
+        logger.info("model saved: %s.", checkpoint_path)
 
     @classmethod
     def load(cls, checkpoint_path):
@@ -69,6 +75,7 @@ class Model(nn.Module):
 
         model = cls(**checkpoint["args"])
         model.load_state_dict(checkpoint["state_dict"])
+        logger.info("model loaded: %s.", checkpoint_path)
         return model
 
 
@@ -127,9 +134,9 @@ def train_main(args):
 
     # load or build model
     if args.restore:
+        logger.info("restoring model.")
         load_path = args.checkpoint_path if args.restore is True else args.restore
         model = Model.load(load_path)
-        logger.info("model restored: %s.", load_path)
     else:
         model = Model(vocab_size=VOCAB_SIZE,
                       embedding_size=args.embedding_size,
@@ -137,10 +144,9 @@ def train_main(args):
                       num_layers=args.num_layers,
                       drop_rate=args.drop_rate)
 
-    # make and clear checkpoint directory
-    make_dirs(args.checkpoint_path, empty=True)
+    # make checkpoint directory
+    make_dirs(args.checkpoint_path)
     model.save(args.checkpoint_path)
-    logger.info("model saved: %s.", args.checkpoint_path)
 
     # loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -172,11 +178,11 @@ def train_main(args):
             logits, state = model.forward(x, state)
             loss = criterion(logits, y.view(-1))
             epoch_losses[j] = loss.data[0]
-            # propagate gradient
+            # calculate gradients
             loss.backward()
             # clip gradient norm
             nn.utils.clip_grad_norm(model.parameters(), args.clip_norm)
-            # apply update
+            # apply gradient update
             optimizer.step()
 
         # logs
@@ -185,7 +191,6 @@ def train_main(args):
                     epoch, duration_epoch, epoch_losses.mean())
         # checkpoint
         model.save(args.checkpoint_path)
-        logger.info("model saved: %s.", args.checkpoint_path)
         # generate text
         seed = generate_seed(text)
         generate_text(model, seed)
@@ -206,7 +211,6 @@ def generate_main(args):
     """
     # load model
     inference_model = Model.load(args.checkpoint_path)
-    logger.info("model loaded: %s.", args.checkpoint_path)
 
     # create seed if not specified
     if args.seed is None:
@@ -217,7 +221,7 @@ def generate_main(args):
     else:
         seed = args.seed
 
-    return generate_text(inference_model, seed, args.length, 10)
+    return generate_text(inference_model, seed, args.length, 3)
 
 
 if __name__ == "__main__":

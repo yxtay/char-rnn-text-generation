@@ -1,4 +1,4 @@
-# Character Embedding Recurrent Neural Network Text Generation Models
+# Character Embeddings Recurrent Neural Network Text Generation Models
 
 Inspired by [Andrej Karpathy](https://github.com/karpathy/)'s 
 [The Unreasonable Effectiveness of Recurrent Neural Networks](https://karpathy.github.io/2015/05/21/rnn-effectiveness/).
@@ -10,10 +10,10 @@ This repository attempts to replicate the models, with slight modifications, in 
 - [Keras](#keras)
 - [Tensorflow](#tensorflow)
 - [PyTorch](#pytorch)
+- [Chainer](#chainer)
 - Caffe
 - MXNet
 - CNTK
-- Chainer
 
 ## Default Model Specification
 
@@ -114,7 +114,7 @@ python keras_model.py generate \
     --checkpoint-path=checkpoints/keras_tinyshakespeare/model.hdf5
 ```
 
-## Tensorflow
+## TensorFlow
 
 ### Training
 
@@ -156,4 +156,26 @@ Example:
 python pytorch_model.py generate \
     --text-path=data/tinyshakespeare.txt \
     --checkpoint-path=checkpoints/pytorch_tinyshakespeare/model.ckpt
+```
+
+## Chainer
+
+### Training
+
+Example:
+
+```bash
+python chainer_model.py train \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/chainer_tinyshakespeare/model.ckpt
+```
+
+### Text Generation
+
+Example:
+
+```bash
+python chainer_model.py generate \
+    --text-path=data/tinyshakespeare.txt \
+    --checkpoint-path=checkpoints/chainer_tinyshakespeare/model.ckpt
 ```

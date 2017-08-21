@@ -123,9 +123,9 @@ def build_model(batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
 
     # data placeholders
     x = tf.placeholder(tf.int32, [None, None], "X")
-    # [batch_size, seq_len]
+    # shape: [batch_size, seq_len]
     y = tf.placeholder(tf.int32, [None, None], "Y")
-    # [batch_size, seq_len]
+    # shape: [batch_size, seq_len]
 
     model = {"X": x, "Y": y, "args": model_args}
     model.update(build_infer_graph(model["X"],
@@ -154,13 +154,13 @@ def load_inference_model(checkpoint_path):
     """
     builds inference model from model args saved in `checkpoint_path`
     """
-    logger.info("restoring inference model: %s.", checkpoint_path)
     # load model args
     with open("{}.json".format(checkpoint_path)) as f:
         model_args = json.load(f)
     # edit batch_size and p_keep
     model_args.update({"batch_size": 1, "p_keep": 1.0})
     infer_model = build_model(**model_args, build_eval=False, build_train=False)
+    logger.info("inference model loaded: %s.", checkpoint_path)
     return infer_model
 
 
@@ -207,9 +207,9 @@ def train_main(args):
     # restore or build model
     if args.restore:
         load_path = args.checkpoint_path if args.restore is True else args.restore
-        logger.info("restoring model: %s.", load_path)
         with open("{}.json".format(args.checkpoint_path)) as f:
             model_args = json.load(f)
+        logger.info("model restored: %s.", load_path)
     else:
         load_path = None
         model_args = {"batch_size": args.batch_size,
@@ -238,8 +238,8 @@ def train_main(args):
         # save model
         with open("{}.json".format(args.checkpoint_path), "w") as f:
             json.dump(train_model["args"], f, indent=2)
-        save_path = train_model["saver"].save(train_sess, args.checkpoint_path)
-        logger.info("model saved: %s.", save_path)
+        checkpoint_path = train_model["saver"].save(train_sess, args.checkpoint_path)
+        logger.info("model saved: %s.", checkpoint_path)
         # tensorboard logger
         summary_writer = tf.summary.FileWriter(log_dir, train_sess.graph)
         # embeddings visualisation
@@ -289,7 +289,8 @@ def train_main(args):
             # generate text
             seed = generate_seed(text)
             with tf.Session(graph=inference_graph) as infer_sess:
-                inference_model["saver"].restore(infer_sess, save_path)
+                # restore weights
+                inference_model["saver"].restore(infer_sess, checkpoint_path)
                 generate_text(inference_model, infer_sess, seed)
 
         # training end
@@ -298,7 +299,8 @@ def train_main(args):
         # generate text
         seed = generate_seed(text)
         with tf.Session(graph=inference_graph) as infer_sess:
-            inference_model["saver"].restore(infer_sess, save_path)
+            # restore weights
+            inference_model["saver"].restore(infer_sess, checkpoint_path)
             generate_text(inference_model, infer_sess, seed, 1024, 3)
 
     return train_model
