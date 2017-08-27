@@ -1,7 +1,5 @@
-from argparse import ArgumentParser
 import json
 import os
-import sys
 import time
 
 import numpy as np
@@ -12,8 +10,8 @@ from tensorflow.contrib import layers, rnn
 from tensorflow.contrib.tensorboard.plugins import projector
 
 from logger import get_logger
-from utils import (make_dirs, encode_text, generate_seed, ID2CHAR,
-                   sample_from_probs, batch_generator, VOCAB_SIZE)
+from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
+                   make_dirs, sample_from_probs, VOCAB_SIZE)
 
 logger = get_logger(__name__)
 
@@ -218,7 +216,8 @@ def train_main(args):
                       "rnn_size": args.rnn_size,
                       "num_layers": args.num_layers,
                       "p_keep": 1 - args.drop_rate,
-                      "learning_rate": args.learning_rate}
+                      "learning_rate": args.learning_rate,
+                      "clip_norm": args.clip_norm}
 
     # build train model
     train_graph = tf.Graph()
@@ -328,63 +327,9 @@ def generate_main(args):
     with tf.Session(graph=inference_graph) as infer_sess:
         # restore weights
         inference_model["saver"].restore(infer_sess, args.checkpoint_path)
-        return generate_text(inference_model, infer_sess, seed, args.length, 3)
+        return generate_text(inference_model, infer_sess, seed, args.length, args.top_n)
 
 
 if __name__ == "__main__":
     logger = get_logger(__name__, console=True)
-
-    arg_parser = ArgumentParser(
-        description="Keras character embedding LSTM text generation model.")
-    subparsers = arg_parser.add_subparsers(title="subcommands")
-
-    # train args
-    train_parser = subparsers.add_parser("train", help="train model")
-    train_parser.add_argument("--text-path", required=True,
-                              help="path of text file for training")
-    train_parser.add_argument("--checkpoint-path", required=True,
-                              help="path to save or load model checkpoints; "
-                                   "tensorboard logs will be saved in the same directory")
-    train_parser.add_argument("--restore", nargs="?", default=False, const=True,
-                              help="whether to restore from checkpoint_path "
-                                   "or from another path if specified")
-    train_parser.add_argument("--seq-len", type=int, default=64,
-                              help="sequence length of inputs and outputs")
-    train_parser.add_argument("--embedding-size", type=int, default=32,
-                              help="character embedding size")
-    train_parser.add_argument("--rnn-size", type=int, default=128,
-                              help="size of rnn cell")
-    train_parser.add_argument("--num-layers", type=int, default=2,
-                              help="number of rnn layers")
-    train_parser.add_argument("--drop-rate", type=float, default=0.,
-                              help="dropout rate for rnn layers")
-    train_parser.add_argument("--learning-rate", type=float, default=0.001,
-                              help="learning rate")
-    train_parser.add_argument("--clip-norm", type=float, default=5.,
-                              help="max norm to clip gradient")
-    train_parser.add_argument("--batch-size", type=int, default=64,
-                              help="training batch size")
-    train_parser.add_argument("--num-epochs", type=int, default=32,
-                              help="number of epochs for training")
-    train_parser.set_defaults(main=train_main)
-
-    # generate args
-    generate_parser = subparsers.add_parser("generate", help="generate text from trained model")
-    generate_parser.add_argument("--checkpoint-path", required=True,
-                                 help="path to load model checkpoints")
-    generate_parser.add_argument("--text-path", required=True,
-                                 help="path of text file to generate seed")
-    generate_parser.add_argument("--seed", default=None,
-                                 help="seed character sequence")
-    generate_parser.add_argument("--length", type=int, default=1024,
-                                 help="length of character sequence to generate")
-    generate_parser.set_defaults(main=generate_main)
-
-    args = arg_parser.parse_args()
-    logger.debug("call: %s", " ".join(sys.argv))
-    logger.debug("ArgumentParser: %s", args)
-
-    try:
-        args.main(args)
-    except Exception as e:
-        logger.exception(e)
+    main("TensorFlow", train_main, generate_main)

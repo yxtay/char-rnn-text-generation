@@ -21,7 +21,7 @@ python pytorch_model.py train --text=data/shakespeare.txt --checkpoint=checkpoin
 python pytorch_model.py generate --text=data/shakespeare.txt --checkpoint=checkpoints/pytorch_shakespeare/model.ckpt
 
 # chainer
-python chainer_model.py train --text=data/tinyshakespeare.txt --checkpoint=checkpoints/chainer_tinyshakespeare/model.npz --num-epochs=8
+python chainer_model.py train --text=data/tinyshakespeare.txt --checkpoint=checkpoints/chainer_tinyshakespeare/model.npz
 python chainer_model.py generate --text=data/tinyshakespeare.txt --checkpoint=checkpoints/chainer_tinyshakespeare/model.npz
 
 python chainer_model.py train --text=data/shakespeare.txt --checkpoint=checkpoints/chainer_shakespeare/model.npz

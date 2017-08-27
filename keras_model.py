@@ -1,5 +1,3 @@
-from argparse import ArgumentParser
-import sys
 import time
 
 import numpy as np
@@ -10,22 +8,24 @@ from keras.models import load_model, Sequential
 from keras.optimizers import Nadam
 
 from logger import get_logger
-from utils import (make_dirs, encode_text, generate_seed, ID2CHAR,
-                   sample_from_probs, batch_generator, VOCAB_SIZE)
+from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
+                   make_dirs, sample_from_probs, VOCAB_SIZE)
 
 logger = get_logger(__name__)
 
 
 def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
-                rnn_size=128, num_layers=2, drop_rate=0.0, learning_rate=0.001):
+                rnn_size=128, num_layers=2, drop_rate=0.0,
+                learning_rate=0.001, clip_norm=5.0):
     """
     build character embeddings LSTM text generation model.
     """
     logger.info("building model: batch_size=%s, seq_len=%s, vocab_size=%s, "
                 "embedding_size=%s, rnn_size=%s, num_layers=%s, drop_rate=%s, "
-                "learning_rate=%s.",
+                "learning_rate=%s, clip_norm=%s.",
                 batch_size, seq_len, vocab_size, embedding_size,
-                rnn_size, num_layers, drop_rate, learning_rate)
+                rnn_size, num_layers, drop_rate,
+                learning_rate, clip_norm)
     model = Sequential()
     # input shape: (batch_size, seq_len)
     model.add(Embedding(vocab_size, embedding_size,
@@ -38,7 +38,7 @@ def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
     # shape: (batch_size, seq_len, rnn_size)
     model.add(TimeDistributed(Dense(vocab_size, activation="softmax")))
     # output shape: (batch_size, seq_len, vocab_size)
-    optimizer = Nadam(learning_rate)  # TODO: add clipnorm when it handles embeddings
+    optimizer = Nadam(learning_rate, clipnorm=clip_norm)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer)
     return model
 
@@ -152,7 +152,8 @@ def train_main(args):
                             rnn_size=args.rnn_size,
                             num_layers=args.num_layers,
                             drop_rate=args.drop_rate,
-                            learning_rate=args.learning_rate)
+                            learning_rate=args.learning_rate,
+                            clip_norm=args.clip_norm)
 
     # make and clear checkpoint directory
     log_dir = make_dirs(args.checkpoint_path, empty=True)
@@ -194,63 +195,9 @@ def generate_main(args):
     else:
         seed = args.seed
 
-    return generate_text(inference_model, seed, args.length, 3)
+    return generate_text(inference_model, seed, args.length, args.top_n)
 
 
 if __name__ == "__main__":
     logger = get_logger(__name__, console=True)
-
-    arg_parser = ArgumentParser(
-        description="Keras character embedding LSTM text generation model.")
-    subparsers = arg_parser.add_subparsers(title="subcommands")
-
-    # train args
-    train_parser = subparsers.add_parser("train", help="train model")
-    train_parser.add_argument("--text-path", required=True,
-                              help="path of text file for training")
-    train_parser.add_argument("--checkpoint-path", required=True,
-                              help="path to save or load model checkpoints; "
-                                   "tensorboard logs will be saved in the same directory")
-    train_parser.add_argument("--restore", nargs="?", default=False, const=True,
-                              help="whether to restore from checkpoint_path "
-                                   "or from another path if specified")
-    train_parser.add_argument("--seq-len", type=int, default=64,
-                              help="sequence length of inputs and outputs")
-    train_parser.add_argument("--embedding-size", type=int, default=32,
-                              help="character embedding size")
-    train_parser.add_argument("--rnn-size", type=int, default=128,
-                              help="size of rnn cell")
-    train_parser.add_argument("--num-layers", type=int, default=2,
-                              help="number of rnn layers")
-    train_parser.add_argument("--drop-rate", type=float, default=0.,
-                              help="dropout rate for rnn layers")
-    train_parser.add_argument("--learning-rate", type=float, default=0.001,
-                              help="learning rate")
-    train_parser.add_argument("--clip-norm", type=float, default=5.,
-                              help="max norm to clip gradient")
-    train_parser.add_argument("--batch-size", type=int, default=64,
-                              help="training batch size")
-    train_parser.add_argument("--num-epochs", type=int, default=32,
-                              help="number of epochs for training")
-    train_parser.set_defaults(main=train_main)
-
-    # generate args
-    generate_parser = subparsers.add_parser("generate", help="generate text from trained model")
-    generate_parser.add_argument("--checkpoint-path", required=True,
-                                 help="path to load model checkpoints")
-    generate_parser.add_argument("--text-path", required=True,
-                                 help="path of text file to generate seed")
-    generate_parser.add_argument("--seed", default=None,
-                                 help="seed character sequence")
-    generate_parser.add_argument("--length", type=int, default=1024,
-                                 help="length of character sequence to generate")
-    generate_parser.set_defaults(main=generate_main)
-
-    args = arg_parser.parse_args()
-    logger.debug("call: %s", " ".join(sys.argv))
-    logger.debug("ArgumentParser: %s", args)
-
-    try:
-        args.main(args)
-    except Exception as e:
-        logger.exception(e)
+    main("Keras", train_main, generate_main)
