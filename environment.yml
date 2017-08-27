@@ -1,0 +1,15 @@
+name: dl
+channels:
+- defaults
+- soumith
+dependencies:
+- anaconda=4.4
+- python=3.5
+- pytorch=0.1
+- tqdm=4.15
+- pip:
+  - chainer==2.0
+  - https://cntk.ai/PythonWheel/CPU-Only/cntk-2.1-cp35-cp35m-linux_x86_64.whl
+  - keras==2.0
+  - mxnet==0.11
+  - tensorflow==1.3
