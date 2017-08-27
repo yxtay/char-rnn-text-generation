@@ -7,13 +7,13 @@ This repository attempts to replicate the models, with slight modifications, in 
 
 ## Frameworks
 
-- [Keras](#keras)
-- [Tensorflow](#tensorflow)
-- [PyTorch](#pytorch)
-- [Chainer](#chainer)
-- Caffe
+- Keras: [`keras_model.py`](keras_model.py)
+- TensorFlow: [`tf_model.py`](tf_model.py)
+- PyTorch: [`pytorch_model.py`](pytorch_model.py)
+- Chainer: [`chainer_model.py`](chainer_model.py)
 - MXNet
 - CNTK
+- Caffe
 
 ## Default Model Specification
 
@@ -35,22 +35,27 @@ This repository attempts to replicate the models, with slight modifications, in 
 - Learning rate: 0.001
 - Max gradient norm: 5.0
 
-## Keras
+## Setup
+
+```bash
+conda env create -f=environment.yml
+```
+
+## Usage
 
 ### Training
 
-Usage:
-
 ```
-usage: keras_model.py train [-h] --text-path TEXT_PATH --checkpoint-path
-                            CHECKPOINT_PATH [--restore [RESTORE]]
-                            [--seq-len SEQ_LEN]
-                            [--embedding-size EMBEDDING_SIZE]
-                            [--rnn-size RNN_SIZE] [--num-layers NUM_LAYERS]
-                            [--drop-rate DROP_RATE]
-                            [--learning-rate LEARNING_RATE]
-                            [--clip-norm CLIP_NORM] [--batch-size BATCH_SIZE]
-                            [--num-epochs NUM_EPOCHS]
+usage: <framework>_model.py train [-h] --text-path TEXT_PATH --checkpoint-path
+                                  CHECKPOINT_PATH [--restore [RESTORE]]
+                                  [--seq-len SEQ_LEN]
+                                  [--embedding-size EMBEDDING_SIZE]
+                                  [--rnn-size RNN_SIZE] [--num-layers NUM_LAYERS]
+                                  [--drop-rate DROP_RATE]
+                                  [--learning-rate LEARNING_RATE]
+                                  [--clip-norm CLIP_NORM] 
+                                  [--batch-size BATCH_SIZE]
+                                  [--num-epochs NUM_EPOCHS]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -61,40 +66,38 @@ optional arguments:
                         logs will be saved in the same directory
   --restore [RESTORE]   whether to restore from checkpoint_path or from
                         another path if specified
-  --seq-len SEQ_LEN     sequence length of inputs and outputs
+  --seq-len SEQ_LEN     sequence length of inputs and outputs (default: 64)
   --embedding-size EMBEDDING_SIZE
-                        character embedding size
-  --rnn-size RNN_SIZE   size of rnn cell
+                        character embedding size (default: 32)
+  --rnn-size RNN_SIZE   size of rnn cell (default: 128)
   --num-layers NUM_LAYERS
-                        number of rnn layers
+                        number of rnn layers (default: 2)
   --drop-rate DROP_RATE
-                        dropout rate for rnn layers
+                        dropout rate for rnn layers (default: 0.0)
   --learning-rate LEARNING_RATE
-                        learning rate
+                        learning rate (default: 0.001)
   --clip-norm CLIP_NORM
-                        max norm to clip gradient
+                        max norm to clip gradient (default: 5.0)
   --batch-size BATCH_SIZE
-                        training batch size
+                        training batch size (default: 64)
   --num-epochs NUM_EPOCHS
-                        number of epochs for training
+                        number of epochs for training (default: 32)
 ```
 
 Example:
 
 ```bash
-python keras_model.py train \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/keras_tinyshakespeare/model.hdf5
+python tf_model.py train \
+    --text=data/tinyshakespeare.txt \
+    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt
 ```
 
 ### Text Generation
 
-Usage:
-
 ```
-usage: keras_model.py generate [-h] --checkpoint-path CHECKPOINT_PATH
-                               --text-path TEXT_PATH [--seed SEED]
-                               [--length LENGTH]
+usage: <framework>_model.py generate [-h] --checkpoint-path CHECKPOINT_PATH
+                                     --text-path TEXT_PATH [--seed SEED]
+                                     [--length LENGTH] [--top-n TOP_N]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -103,79 +106,56 @@ optional arguments:
   --text-path TEXT_PATH
                         path of text file to generate seed
   --seed SEED           seed character sequence
-  --length LENGTH       length of character sequence to generate
+  --length LENGTH       length of character sequence to generate (default:
+                        1024)
+  --top-n TOP_N         number of top choices to sample (default: 3)
 ```
-
-Example:
-
-```bash
-python keras_model.py generate \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/keras_tinyshakespeare/model.hdf5
-```
-
-## TensorFlow
-
-### Training
-
-Example:
-
-```bash
-python tf_model.py train \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt
-```
-
-### Text Generation
 
 Example:
 
 ```bash
 python tf_model.py generate \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt
+    --text=data/tinyshakespeare.txt \
+    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
+    --seed="KING RICHARD"
 ```
 
-## PyTorch
+Sample output:
 
-### Training
-
-Example:
-
-```bash
-python pytorch_model.py train \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/pytorch_tinyshakespeare/model.ckpt
 ```
+KING RICHARDIIIIl II I tell thee,
+As I have no mark of his confection,
+The people so see my son.
 
-### Text Generation
+SEBASTIAN:
+I have men's man in the common to his sounds,
+And so she said of my soul, and to him,
+And too marry his sun their commanded
+As thou shalt be alone too means
+As he should to thy sensess so far to mark of
+these foul trust them fringer whom, there would he had
+As the word of merrous and subject.
 
-Example:
+GLOUCESTER:
+A spack, a service the counsel son and here.
+What is a misin the wind and to the will
+And shall not streaks of this show into all heard.
 
-```bash
-python pytorch_model.py generate \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/pytorch_tinyshakespeare/model.ckpt
-```
+KING EDIN YORK:
+I will be suppet on himself tears as the sends.
 
-## Chainer
+KING EDWARD IV:
+No looks and them, and while, a will, when this way.
 
-### Training
+BAPTHIO:
+A mortain and me to the callant our souls
+And the changed and such of the son.
 
-Example:
-
-```bash
-python chainer_model.py train \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/chainer_tinyshakespeare/model.ckpt
-```
-
-### Text Generation
-
-Example:
-
-```bash
-python chainer_model.py generate \
-    --text-path=data/tinyshakespeare.txt \
-    --checkpoint-path=checkpoints/chainer_tinyshakespeare/model.ckpt
+CORIOLANUS:
+I will, so show me with the child to the could sheep
+To beseence, and shall so so should but hear
+Than him with her fair to be that soul,
+Whishe it is no meach of my lard and
+And this, and with my love and the senter'd with marked
+And her should
 ```
