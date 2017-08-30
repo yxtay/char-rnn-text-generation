@@ -1,3 +1,4 @@
+import os
 import time
 
 import numpy as np
@@ -5,7 +6,7 @@ import numpy as np
 from keras.callbacks import Callback, ModelCheckpoint, TensorBoard
 from keras.layers import Dense, Dropout, Embedding, LSTM, TimeDistributed
 from keras.models import load_model, Sequential
-from keras.optimizers import Nadam
+from keras.optimizers import Adam
 
 from logger import get_logger
 from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
@@ -38,7 +39,7 @@ def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
     # shape: (batch_size, seq_len, rnn_size)
     model.add(TimeDistributed(Dense(vocab_size, activation="softmax")))
     # output shape: (batch_size, seq_len, vocab_size)
-    optimizer = Nadam(learning_rate, clipnorm=clip_norm)
+    optimizer = Adam(learning_rate, clipnorm=clip_norm)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer)
     return model
 
@@ -162,7 +163,8 @@ def train_main(args):
     # callbacks
     callbacks = [
         ModelCheckpoint(args.checkpoint_path, verbose=1, save_best_only=False),
-        TensorBoard(log_dir),
+        TensorBoard(log_dir, write_graph=True, embeddings_freq=1,
+                    embeddings_metadata={"embedding_1": os.path.abspath(os.path.join("data", "id2char.tsv"))}),
         LoggerCallback(text, model)
     ]
 

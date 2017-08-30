@@ -11,7 +11,7 @@ This repository attempts to replicate the models, with slight modifications, in 
 - TensorFlow: [`tf_model.py`](tf_model.py)
 - PyTorch: [`pytorch_model.py`](pytorch_model.py)
 - Chainer: [`chainer_model.py`](chainer_model.py)
-- MXNet
+- MXNet: [`mxnet_model.py`](mxnet_model.py)
 - CNTK
 - Caffe
 
@@ -88,15 +88,15 @@ Example:
 
 ```bash
 python tf_model.py train \
-    --text=data/tinyshakespeare.txt \
-    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt
+    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
+    --text=data/tinyshakespeare.txt
 ```
 
 ### Text Generation
 
 ```
 usage: <framework>_model.py generate [-h] --checkpoint-path CHECKPOINT_PATH
-                                     --text-path TEXT_PATH [--seed SEED]
+                                     (--text-path TEXT_PATH | --seed SEED)
                                      [--length LENGTH] [--top-n TOP_N]
 
 optional arguments:
@@ -115,7 +115,6 @@ Example:
 
 ```bash
 python tf_model.py generate \
-    --text=data/tinyshakespeare.txt \
     --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
     --seed="KING RICHARD"
 ```

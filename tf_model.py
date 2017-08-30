@@ -264,11 +264,10 @@ def train_main(args):
         time_train = time.time()
 
         for i in range(args.num_epochs):
-            epoch = i + 1
             epoch_losses = np.empty(num_batches)
             time_epoch = time.time()
             # training epoch
-            for j in tqdm(range(num_batches), desc="epoch {}/{}".format(epoch, args.num_epochs)):
+            for j in tqdm(range(num_batches), desc="epoch {}/{}".format(i + 1, args.num_epochs)):
                 x, y = next(data_iter)
                 feed_dict = {train_model["X"]: x, train_model["Y"]: y, train_model["input_state"]: state}
                 _, state, loss, summary_log = train_sess.run(fetches, feed_dict)
@@ -277,9 +276,9 @@ def train_main(args):
             # logs
             duration_epoch = time.time() - time_epoch
             logger.info("epoch: %s, duration: %ds, loss: %.6g.",
-                        epoch, duration_epoch, epoch_losses.mean())
+                        i + 1, duration_epoch, epoch_losses.mean())
             # tensorboard logs
-            summary_writer.add_summary(summary_log, epoch)
+            summary_writer.add_summary(summary_log, i + 1)
             summary_writer.flush()
             # checkpoint
             checkpoint_path = train_model["saver"].save(train_sess, args.checkpoint_path)

@@ -38,9 +38,9 @@ class Network(ChainList):
             self.add_link(link)
         self.add_link(self.decoder)
 
-    def __call__(self, input):
+    def __call__(self, inputs):
         # input shape: [batch_size]
-        embed_seq = F.dropout(self.encoder(input), self.args["drop_rate"])
+        embed_seq = F.dropout(self.encoder(inputs), self.args["drop_rate"])
         # shape: [batch_size, embedding_size]
         rnn_out = embed_seq
         for link in self.rnn_layers:
@@ -51,20 +51,23 @@ class Network(ChainList):
         return logits
 
     def reset_state(self):
+        """
+        resets rnn states.
+        """
         for link in self.rnn_layers:
             link.reset_state()
 
 
-def load_model(load_path):
+def load_model(checkpoint_path):
     """
-    restore model from load_path
+    loads model from checkpoint_path.
     """
-    with open("{}.json".format(load_path)) as f:
+    with open("{}.json".format(checkpoint_path)) as f:
         model_args = json.load(f)
     net = Network(**model_args)
     model = L.Classifier(net)
-    chainer.serializers.load_npz(load_path, model)
-    logger.info("model loaded: %s.", load_path)
+    chainer.serializers.load_npz(checkpoint_path, model)
+    logger.info("model loaded: %s.", checkpoint_path)
     return model
 
 

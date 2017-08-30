@@ -145,11 +145,11 @@ def main(framework, train_main, generate_main):
     subparsers = arg_parser.add_subparsers(title="subcommands")
 
     # train args
-    train_parser = subparsers.add_parser("train", help="train model")
-    train_parser.add_argument("--text-path", required=True,
-                              help="path of text file for training")
+    train_parser = subparsers.add_parser("train", help="train model on text file")
     train_parser.add_argument("--checkpoint-path", required=True,
                               help="path to save or load model checkpoints")
+    train_parser.add_argument("--text-path", required=True,
+                              help="path of text file for training")
     train_parser.add_argument("--restore", nargs="?", default=False, const=True,
                               help="whether to restore from checkpoint_path "
                                    "or from another path if specified")
@@ -177,10 +177,9 @@ def main(framework, train_main, generate_main):
     generate_parser = subparsers.add_parser("generate", help="generate text from trained model")
     generate_parser.add_argument("--checkpoint-path", required=True,
                                  help="path to load model checkpoints")
-    generate_parser.add_argument("--text-path", required=True,
-                                 help="path of text file to generate seed")
-    generate_parser.add_argument("--seed", default=None,
-                                 help="seed character sequence")
+    group = generate_parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--text-path", help="path of text file to generate seed")
+    group.add_argument("--seed", help="seed character sequence")
     generate_parser.add_argument("--length", type=int, default=1024,
                                  help="length of character sequence to generate (default: %(default)s)")
     generate_parser.add_argument("--top-n", type=int, default=3,
