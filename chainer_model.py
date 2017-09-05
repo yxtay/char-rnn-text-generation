@@ -57,6 +57,19 @@ class Network(ChainList):
         for link in self.rnn_layers:
             link.reset_state()
 
+    def get_state(self):
+        """
+        get rnn states.
+        """
+        return [(link.c, link.h) for link in self.rnn_layers]
+
+    def set_state(self, state):
+        """
+        set rnn states
+        """
+        for link, (c, h) in zip(self.rnn_layers, state):
+            link.set_state(c, h)
+
 
 def load_model(checkpoint_path):
     """
@@ -161,9 +174,8 @@ class LoggerExtension(extension.Extension):
     trigger = (1, "epoch")
     priority = -200
 
-    def __init__(self, text, checkpoint_path):
+    def __init__(self, text):
         self.text = text
-        self.checkpoint_path = checkpoint_path
         self.time_epoch = time.time()
 
     def __call__(self, trainer):
@@ -173,10 +185,14 @@ class LoggerExtension(extension.Extension):
         logger.info("epoch: %s, duration: %ds, loss: %.6g.",
                     epoch, duration_epoch, loss)
 
+        # get rnn state
+        model = trainer.updater.get_optimizer("main").target
+        state = model.predictor.get_state()
         # generate text
-        model = load_model(self.checkpoint_path)
         seed = generate_seed(self.text)
-        generate_text(model.copy(), seed)
+        generate_text(model, seed)
+        # set rnn back to training state
+        model.predictor.set_state(state)
 
         # reset time
         self.time_epoch = time.time()
@@ -231,7 +247,7 @@ def train_main(args):
     trainer.extend(extensions.ProgressBar(update_interval=1))
     trainer.extend(extensions.LogReport())
     trainer.extend(extensions.PlotReport(y_keys=["main/loss"]))
-    trainer.extend(LoggerExtension(text, args.checkpoint_path))
+    trainer.extend(LoggerExtension(text))
 
     # training start
     model.predictor.reset_state()
@@ -243,9 +259,8 @@ def train_main(args):
     duration_train = time.time() - time_train
     logger.info("end of training, duration: %ds.", duration_train)
     # generate text
-    model = load_model(args.checkpoint_path)
     seed = generate_seed(text)
-    generate_text(model.copy(), seed, 1024, 3)
+    generate_text(model, seed, 1024, 3)
     return model
 
 

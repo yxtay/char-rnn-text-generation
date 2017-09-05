@@ -130,6 +130,7 @@ def train_main(args):
                       num_layers=args.num_layers,
                       drop_rate=args.drop_rate)
         model.initialize(mx.init.Xavier())
+    model.hybridize()
 
     # make checkpoint directory
     make_dirs(args.checkpoint_path)

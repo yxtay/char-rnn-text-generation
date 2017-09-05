@@ -47,18 +47,18 @@ def create_dictionary():
 CHAR2ID, ID2CHAR, VOCAB_SIZE = create_dictionary()
 
 
-def encode_text(text):
+def encode_text(text, char2id=CHAR2ID):
     """
     encode text to array of integers with CHAR2ID
     """
-    return np.fromiter((CHAR2ID.get(ch, 0) for ch in text), int)
+    return np.fromiter((char2id.get(ch, 0) for ch in text), int)
 
 
-def decode_text(int_array):
+def decode_text(int_array, id2char=ID2CHAR):
     """
     decode array of integers to text with ID2CHAR
     """
-    return "".join((ID2CHAR[ch] for ch in int_array))
+    return "".join((id2char[ch] for ch in int_array))
 
 
 def one_hot_encode(indices, num_classes):
@@ -179,7 +179,7 @@ def main(framework, train_main, generate_main):
                                  help="path to load model checkpoints")
     group = generate_parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--text-path", help="path of text file to generate seed")
-    group.add_argument("--seed", help="seed character sequence")
+    group.add_argument("--seed", default=None, help="seed character sequence")
     generate_parser.add_argument("--length", type=int, default=1024,
                                  help="length of character sequence to generate (default: %(default)s)")
     generate_parser.add_argument("--top-n", type=int, default=3,
