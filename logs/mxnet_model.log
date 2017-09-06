@@ -1,0 +1,856 @@
+2017-09-06 04:02:10,969 - utils - DEBUG - call: mxnet_model.py train --checkpoint=checkpoints/mxnet_tinyshakespeare/model.params --text=data/tinyshakespeare.txt
+2017-09-06 04:02:10,970 - utils - DEBUG - ArgumentParser: Namespace(batch_size=64, checkpoint_path='checkpoints/mxnet_tinyshakespeare/model.params', clip_norm=5.0, drop_rate=0.0, embedding_size=32, learning_rate=0.001, main=<function train_main at 0x7fb95f607d08>, num_epochs=32, num_layers=2, restore=False, rnn_size=128, seq_len=64, text_path='data/tinyshakespeare.txt')
+2017-09-06 04:02:10,971 - __main__ - INFO - corpus length: 1115394.
+2017-09-06 04:02:10,996 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:02:11,347 - __main__ - INFO - start of training.
+2017-09-06 04:02:11,351 - utils - INFO - number of batches: 272.
+2017-09-06 04:02:11,351 - utils - INFO - effective text length: 1114112.
+2017-09-06 04:02:11,352 - utils - INFO - x shape: (64, 17408).
+2017-09-06 04:02:11,352 - utils - INFO - y shape: (64, 17408).
+2017-09-06 04:05:58,835 - __main__ - INFO - epoch: 1, duration: 227s, loss: 3.10827.
+2017-09-06 04:05:59,112 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:05:59,113 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:05:59,114 - __main__ - INFO - generating with seed: "er".
+2017-09-06 04:06:01,189 - __main__ - INFO - generated text:
+erre tared are at ant mand hh sans od,
+Io mous t aolssadd in war bad her bente, anl teid, nings tim more, toon tise shirise br ad hhe no te burosd te ans tiss tho thore hanr
+Shere cisrerdes be oat asrened weing, se ace tot su sind arl the be memeted wh add hos belthe monn at tonn tithad it worent sougo he, hin the sorer werhel sonsid the saty hru tous
+
+nam fosde whur wit,
+Hhed why ther waund.
+
+
+SROTIN:
+Eor tlend ite mhit,
+Bhot ty it whe soel wentis hy sont, sety ase to amlols hors hius,
+
+ninens id heut hout t
+
+2017-09-06 04:09:47,252 - __main__ - INFO - epoch: 2, duration: 226s, loss: 2.29085.
+2017-09-06 04:09:47,715 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:09:47,717 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:09:47,717 - __main__ - INFO - generating with seed: "pe of
+an".
+2017-09-06 04:09:49,352 - __main__ - INFO - generated text:
+pe of
+and, sule mendy,
+Fy thou me ad shim me wandis, forger
+In a hingteld hy whals that then ar sore,
+Thit wash thee mealer wereneld, beirs; my tithe fome munt thich the caresime:
+And dild im ond antimes hateln as of hloud froon as
+Fare to busteets shy will his's winlt
+As that il to mency
+hinged is shenders as hith.
+Anll thith hoo breld and his' hay buse: it tor to the tarle maghad oprone bure,
+Me ant hror il tour ane sild ip ham he in bass te ane bage to thave tins to mure,
+Thes womanlo fare to with
+I barlo seot t
+
+2017-09-06 04:13:37,572 - __main__ - INFO - epoch: 3, duration: 228s, loss: 2.07992.
+2017-09-06 04:13:37,952 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:13:37,954 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:13:37,954 - __main__ - INFO - generating with seed: "rself.
+All this I know; and to t".
+2017-09-06 04:13:39,643 - __main__ - INFO - generated text:
+rself.
+All this I know; and to tandall thite, me me binch to
+so hy to suil and my hided this mome,
+Thing moud thee alos saster.-
+Hich mimed youl out ton soors in hive a hear;
+Miviog not harker.
+
+Kinds Vans:
+Cole is igon though ildalidy,
+The linds of hing me hacle,, sith afanom:
+To wore betacile to buce if your mroch, mone ame to wise hossss.
+Whit ond hast ofe'd sours that he thie batere
+And one the lest is nome buttis, mowendisgis,
+Sindes apour ar the detert them a dore, thee tither;
+Housh woust hy srome, wice, thou serlent at wink, bacte
+
+2017-09-06 04:17:28,357 - __main__ - INFO - epoch: 4, duration: 228s, loss: 1.94899.
+2017-09-06 04:17:28,828 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:17:28,830 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:17:28,830 - __main__ - INFO - generating with seed: "g fire
+That stag".
+2017-09-06 04:17:30,479 - __main__ - INFO - generated text:
+g fire
+That stagkt, and frese.
+
+LENINUS:
+As Inelow'd the tay ool thim have to,
+And the him of youd chood's arcy him;
+And to to boots she avery and as appeld
+At and whee to hear theust bees to,
+To lomly buting bud a hoors with wist bod,
+And and hings allest amrangors to thite to mich;
+And a coomed and wore a have my sair,
+Thou coonder that he winks wirt, wame to lim bidssed
+To lusing frigut ass and hy toneneds, his day.
+
+LINH:
+Buster, her deak hask of heir with she bost.
+
+LOTENLI:
+It my sept and hast hastily strrefie.
+
+PROR
+
+2017-09-06 04:21:16,415 - __main__ - INFO - epoch: 5, duration: 225s, loss: 1.85166.
+2017-09-06 04:21:16,650 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:21:16,652 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:21:16,652 - __main__ - INFO - generating with seed: "n:
+Indeed, he should be a footma".
+2017-09-06 04:21:18,356 - __main__ - INFO - generated text:
+n:
+Indeed, he should be a footmance of busce
+If wime.
+
+BUKENTES:
+My soon and hearers, he mutt it thine.
+
+GRUSCERY AD ENRER
+Mone tell in when, I this and thighther,
+As it your giclior: by thounger's.
+
+BRUCIO:
+Say this sursaly it not treakss whall,
+Show, my chailed.
+
+LIONE:
+Both no sie, by world, shont my winks;
+Swilk you thee, to woust on bains sppath,
+I teutter with wemt of livened with wame.
+
+LENES:
+Beding thy consores are to him face of somen.
+
+Citest:
+Too dingon be the thanles and thene and fous are
+By soust, have my but sie.
+
+LEUSENY:
+
+2017-09-06 04:25:08,045 - __main__ - INFO - epoch: 6, duration: 229s, loss: 1.77793.
+2017-09-06 04:25:08,485 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:25:08,487 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:25:08,487 - __main__ - INFO - generating with seed: " s".
+2017-09-06 04:25:10,141 - __main__ - INFO - generated text:
+ spreise,
+To bugnert where and and thouge his soul,
+And nade him her his dake to provess,
+Wifh thou all your prask as with him.
+I, her mard, and the parten for the mines
+To spanteroul her tell apong as hour
+The condans so, spay with till to sir;
+Hoth tas his mady, brece will helval.
+When all to my mood a sheaved as hat as:
+Will had he so son, that, and hise sack ap,
+And with the plicked, fare one mine.
+
+LUCKING EVWaR:
+The lance were being truep's arming, to-bokn,
+And not now my hongay?
+
+CROMENS:
+And I have so
+
+2017-09-06 04:28:53,509 - __main__ - INFO - epoch: 7, duration: 223s, loss: 1.72041.
+2017-09-06 04:28:53,797 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:28:53,800 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:28:53,800 - __main__ - INFO - generating with seed: "er my good word nor princely fav".
+2017-09-06 04:28:55,467 - __main__ - INFO - generated text:
+er my good word nor princely faves,
+But my sorsest wingty she pessing thosh them.
+And may those shard bintay a tan te come with
+His live of her his fither worsing and sees,
+By be madenous werp, I hound you sleed,
+All to suppand thisselve and doich it it,
+When she stoud of this
+In shall bissows so, why fame and twas an son
+In, well take we witthan in thy lited
+Wo the feoth this will saigediers warce;
+Which spirin, have sir, he way, this will his befold
+And frend we till, this dige of my say, it thought;
+And with mage of y that well we chei
+
+2017-09-06 04:32:39,157 - __main__ - INFO - epoch: 8, duration: 223s, loss: 1.67409.
+2017-09-06 04:32:39,647 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:32:39,649 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:32:39,649 - __main__ - INFO - generating with seed: "id talk.
+
+LORD F".
+2017-09-06 04:32:41,302 - __main__ - INFO - generated text:
+id talk.
+
+LORD FORRY
+He will you with mall the live, my bark of?
+
+KING EBDY RARET:
+If heat,, wimes you havisht and doth speated;
+Te man some, it them scue too deather and shams
+This all them boince. Frim's are you but is to to witles, and,
+Apainged from seeshow, I have hive you.
+
+GRUGE:
+How well streed's hush my may's speefs, the cure the fords son.
+
+ROBESLO:
+No hollow,
+For newper breass and she mesise.
+
+LEONTES:
+Where swert you with than may's main you, are be
+What his his parder'd soman shough yer is not
+That is noy whos
+
+2017-09-06 04:36:32,501 - __main__ - INFO - epoch: 9, duration: 231s, loss: 1.63558.
+2017-09-06 04:36:33,088 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:36:33,092 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:36:33,092 - __main__ - INFO - generating with seed: "t treaso".
+2017-09-06 04:36:34,733 - __main__ - INFO - generated text:
+t treason?
+And I silf bodough thou maid, by my bed, house herself?
+Is man's brother, I'll than the truch off the pursact spine
+If may, and as not sour hore, and thou sin,
+And thim thus your dichatiol, mistle of in supperick?
+
+Dord:
+Why sinkerd's than him, whim my heart not his poor;
+Make to so my prows bare's
+He he wouldsh agay to bod a mishen.
+
+FLORENTER:
+I'll way teld my nonise than be deong my house!
+Then seren suppetal such of my boly, I swowerther?
+As I see you we pet, and stown the tonger
+Thouting with the sw
+
+2017-09-06 04:40:22,722 - __main__ - INFO - epoch: 10, duration: 227s, loss: 1.60254.
+2017-09-06 04:40:23,017 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:40:23,019 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:40:23,020 - __main__ - INFO - generating with seed: " tal".
+2017-09-06 04:40:24,658 - __main__ - INFO - generated text:
+ tall and:
+And tas the deed it be sorrow noblo sire;
+The warching me the didied mark,
+That the benison, to yet her my son.
+
+Clown:
+O do any sobaty we tours! a wall him bet.
+Swear to son; whicile, alenst were if is alrsimes?
+We cause bore is heard; hour her soldy, and there,
+I though in thou hate to me as my dright:
+To then been though'd tears' may all his daughter's poor
+The dost.
+
+But:
+Anl all the tenters swardly abour, but they heaven?
+The hadby, and turran, yet your but his
+may you day benishons were happer
+
+
+2017-09-06 04:44:16,492 - __main__ - INFO - epoch: 11, duration: 231s, loss: 1.57411.
+2017-09-06 04:44:16,729 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:44:16,731 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:44:16,732 - __main__ - INFO - generating with seed: "re, and devilish".
+2017-09-06 04:44:18,371 - __main__ - INFO - generated text:
+re, and devilish
+As a cass should te prail, with be say strongs;
+To so was speat years me, shole, the bed of thee:
+With hersed thy distidit and brother hight
+Which are me now spevich of an inteccy our
+bine mesty son, stong wouldst since for, wake way?
+
+PETRENCE:
+Not, ban I by tell this shand be still's
+With cure me, and he croke and sence, sead wime
+Sceepice yet with chony.
+
+GLOUCESTER:
+I seare. Which, arsiest, look our tuttand to
+anto thy, and not he stirn. Hot, I had comen,
+To think nor so mine arviling truccinat.
+
+DUKE
+
+2017-09-06 04:48:05,835 - __main__ - INFO - epoch: 12, duration: 227s, loss: 1.54962.
+2017-09-06 04:48:06,180 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:48:06,182 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:48:06,183 - __main__ - INFO - generating with seed: " what you say, m".
+2017-09-06 04:48:07,830 - __main__ - INFO - generated text:
+ what you say, my swaked
+Stut to you true so, wonk his partines shried. And sear'd,
+And stay you are them, and to my say.
+
+GROSEL:
+The claudially!
+
+GEWORD:
+Bigh's strings his not well, and then threat the heav
+He heart made.
+
+AXTOLY:
+I'll me?
+
+FROSP SEY:
+Before he to her some, what the bay thy bing;
+And see whose armicy.
+
+PETER:
+Not should ben, thyself attend him frian and fide;
+The plief, were cruin him my cirnsty and fores'
+What mustise a till your markned to main he canst helvelf
+I ad my sitious by with sun and that are
+
+2017-09-06 04:51:50,277 - __main__ - INFO - epoch: 13, duration: 222s, loss: 1.52774.
+2017-09-06 04:51:50,516 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:51:50,519 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:51:50,519 - __main__ - INFO - generating with seed: "him and men of heart
+Look'd wond".
+2017-09-06 04:51:52,181 - __main__ - INFO - generated text:
+him and men of heart
+Look'd wonders of the dighe walks with heaven
+To him their bang too such in this subbed age
+Thee for at wathish the falls bear this breather'd sparry
+Took and bring and somen he shall and riport!
+Suce, I have'-ded you stand's heaven owe.
+The mound the seeptly with thou cass not,
+Ald I that I shumbrogn'd, and thou that high
+We'll prot the douth with your lead, home some to be it;
+So to dead show on this.
+
+First Serang:
+I cause, an oft with to bless, meet when sunch'd!
+
+DUCHESS OF YORK
+O, hill by you son all a moneriss
+
+2017-09-06 04:55:39,063 - __main__ - INFO - epoch: 14, duration: 226s, loss: 1.50837.
+2017-09-06 04:55:39,484 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:55:39,487 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:55:39,487 - __main__ - INFO - generating with seed: "l are gone.
+
+Cho".
+2017-09-06 04:55:41,152 - __main__ - INFO - generated text:
+l are gone.
+
+Chost:
+Away, but since's to-do; and I will.
+
+FRLAREN:
+At if a ming is should fools shall we death;
+And I have merry
+As this breaths from this hore subjoutes
+To have bid and thee; thou wilt a prant word,
+Your world all soon a did, sir.
+
+PAURET:
+This imperuser him we will perveins thee sorron
+And his part men's satten to them this, it is.
+
+DUKEN VINCENTIO:
+Marken as welcome?
+
+Secomving:
+Now lives a sumiced a mornow stain their
+tend time to me swolf you to-day, why sone
+With bromence her alooford with soul wife;
+
+
+2017-09-06 04:59:26,295 - __main__ - INFO - epoch: 15, duration: 225s, loss: 1.49118.
+2017-09-06 04:59:26,529 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 04:59:26,532 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:59:26,533 - __main__ - INFO - generating with seed: "t hope i".
+2017-09-06 04:59:28,196 - __main__ - INFO - generated text:
+t hope is wise
+Beason our, and see mine'st by the chrield
+Mand to any be all by thy sudment,
+What may had that's a tence as humpres.
+
+DUCHESS OF YORK:
+Have to me my lord, see the fareed,
+Than but a fool, to his letter too sighted
+To hose a suppered, would dispomit much abes
+True you her company advessing
+To this tongue at about her winds,
+To my sup a gaught out to see, with hamp,
+Hese should breathethersied here to a wander?
+
+RATCHILANUS:
+See to to the tord maigned, the dame.
+
+First Servindma:
+An the more trupled?
+
+2017-09-06 05:03:14,141 - __main__ - INFO - epoch: 16, duration: 225s, loss: 1.47569.
+2017-09-06 05:03:14,427 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:03:14,430 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:03:14,431 - __main__ - INFO - generating with seed: "e,
+Was d".
+2017-09-06 05:03:16,054 - __main__ - INFO - generated text:
+e,
+Was done to be death, when I look as son
+them?
+
+ManIm:
+I mark not the curd and with one again,
+And the wosed much to meeftly the way.
+
+DUKE VINCENTIO:
+Yigh, sir, by my mester'd many fonter for me to
+what musinaly the tremices sometucion with thy breast,
+To all the most be make to be so be
+The word yair from my many are by the frim
+And we there to man and look it me.
+
+DUKE VINCENTIO:
+She with a grace, and the heards true your phario.
+
+KATHARINA:
+A hour's noble hands? his mother honesty
+Becompence and, but at hy p
+
+2017-09-06 05:07:06,380 - __main__ - INFO - epoch: 17, duration: 230s, loss: 1.46163.
+2017-09-06 05:07:06,681 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:07:06,684 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:07:06,684 - __main__ - INFO - generating with seed: "S:".
+2017-09-06 05:07:08,314 - __main__ - INFO - generated text:
+S:
+How, tire and both wy pergit to-boly, alard,
+By terseling and the chirdio my faith,
+With her trurstanns and sack. I have to them,
+And mids-propured with our says of leave:
+The wrong there that I po in soul tendly
+To scorn and will hither to pross murining,
+For a myselfs of this.
+
+PETRUCHIO:
+Some and marrine as I seems, thou has now;
+And at the heart we have prims thee forsh.
+
+PEBELIA:
+Whit, grunt them, sir.
+
+LEONTES:
+A beggh and donest. The man strangly men
+Wemer of her by wilt to me not sitie
+And leave th
+
+2017-09-06 05:10:55,129 - __main__ - INFO - epoch: 18, duration: 226s, loss: 1.44886.
+2017-09-06 05:10:55,663 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:10:55,666 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:10:55,667 - __main__ - INFO - generating with seed: "have spoken true".
+2017-09-06 05:10:57,299 - __main__ - INFO - generated text:
+have spoken true?
+
+FRIAR LAURENCE:
+What said had seirs? Or myself
+So my lord. I have him! and went not witnion.
+For you are not him.
+
+MONTAGE:
+No heart within, but me, sir their sister thanks,
+And I be sin in cannot, the morth,
+Time brought you to be thing for that the kiss!
+
+HORTENSIO:
+How now, whill thee him shall thing by them: I am here
+Were is so, send them the begon and fools.
+
+GLOUCESTER:
+No, I pray he do you and mind in your best:
+I was cristed hath sents by might his mone,
+For the hearts and any a sheeping: splays
+
+2017-09-06 05:14:41,674 - __main__ - INFO - epoch: 19, duration: 224s, loss: 1.43717.
+2017-09-06 05:14:42,225 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:14:42,227 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:14:42,229 - __main__ - INFO - generating with seed: "ha".
+2017-09-06 05:14:43,844 - __main__ - INFO - generated text:
+hat't our hole:
+Think, so lontagions makes thy most capply
+Trunce her shed of my londing: how but scarce,
+I trance on him: I have take my hand
+And with this most propers to deaths of cheer:
+This wistainst tarry's fie and libed and speak.
+
+KING EDWARD IV:
+But, many he is her sack to carce:
+And, be but beficed him: there shall tell me
+And should be so seems to the hour cruy us stoled:
+A child to the both sister: his misself,
+I could as I say sender my cannot strong;
+Have tyranges will him him speeping-signite
+T
+
+2017-09-06 05:18:27,064 - __main__ - INFO - epoch: 20, duration: 223s, loss: 1.42649.
+2017-09-06 05:18:27,591 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:18:27,594 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:18:27,595 - __main__ - INFO - generating with seed: " non".
+2017-09-06 05:18:29,225 - __main__ - INFO - generated text:
+ nonceives in
+survant be at strift most good my sooner mat
+and what have alone or to be without of thy
+foolish'd?
+
+Manmia:
+Ay, when?
+
+ARINI
+US:
+Why, whiling so dif,' and you day not sean to be
+Both at your brother's frother of you.
+
+LADNI EDCARET:
+What doth thy slawe is heard is your friend
+And never but this bod to see his land;
+But, tem, the berowage the freetom, my soffick, as
+Angel it not are as which must to her such!
+
+CARILLO:
+I will not little to so shoulded but
+Why proper of years,
+And where so we are o
+
+2017-09-06 05:22:13,269 - __main__ - INFO - epoch: 21, duration: 224s, loss: 1.41694.
+2017-09-06 05:22:13,822 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:22:13,825 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:22:13,826 - __main__ - INFO - generating with seed: "he manac".
+2017-09-06 05:22:15,535 - __main__ - INFO - generated text:
+he manachighed
+I puilth her such of this colford witly:
+Anto any so betwain soundediener
+Feeling and adved for him by whilstice;
+So to a maid.
+
+BAPTISTA:
+Ay, sortience tou them, take in eye;
+And when I have best to coilf a prefect
+Forgetunity! and who did not will and there.
+
+BENVOLIO:
+Sun holy with than I was not not made a sight
+As the point to how here if I brive his
+fours's drem wyold will seem'd thereow, whose shall been
+the hand tonour is men of desire how come this?
+That hath blood the heavens and son; what
+
+2017-09-06 05:26:09,641 - __main__ - INFO - epoch: 22, duration: 234s, loss: 1.40818.
+2017-09-06 05:26:09,885 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:26:09,887 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:26:09,889 - __main__ - INFO - generating with seed: " to ".
+2017-09-06 05:26:11,537 - __main__ - INFO - generated text:
+ to bewaldst their hearts
+to son, my drese the father with my concell.
+But heaven.
+
+COMINIUS:
+This from content, my noble and stays
+With this, so fear why comes as such any;
+I durgrent we must man such his nection.
+Whom should did my not honour hence?
+
+PETRUCHIO:
+Much too any moward mardance? so much bether,
+Metchared harms, sole still me not be not
+The hurds by thy heart's bayed to' paut,
+But all this throunds the plays to time.
+Stay again; hence it, we much a subject being with me:
+They say is it in her of it
+
+2017-09-06 05:29:58,360 - __main__ - INFO - epoch: 23, duration: 226s, loss: 1.39919.
+2017-09-06 05:29:58,686 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:29:58,688 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:29:58,690 - __main__ - INFO - generating with seed: "f ".
+2017-09-06 05:30:00,324 - __main__ - INFO - generated text:
+f walce, I will.
+And the duke will be in the love here;
+But spit our cemition.
+
+BENVOLIO:
+The says and you have priviant well to del.
+
+KING HENRY VI:
+Go, I that; I himself and my lows with county.
+To prauge!
+
+CATESBA:
+At my bodam, so let my for old set of him
+Towblepy. Hath hath swore stroughts, thou shall happ you
+Till thee appear's putsial so. Hath but thyself?
+I shoudly thou have to came and a gare,
+And tell ye in my force of her witted,
+We'll attend the wieft as what wised for withy
+Sound'd thy being in a
+
+2017-09-06 05:33:52,477 - __main__ - INFO - epoch: 24, duration: 232s, loss: 1.39105.
+2017-09-06 05:33:52,866 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:33:52,869 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:33:52,870 - __main__ - INFO - generating with seed: "onum".
+2017-09-06 05:33:54,524 - __main__ - INFO - generated text:
+onumerey,
+Too nothing for the props field to him.
+I'll twenty blows in hell.-
+
+PETRUCHIO:
+My lord, two had that in senate with he take,
+And had thou art sude and after'd and leals;
+And they shall not beard instraction hands?
+
+POMPEY:
+I am by the mark:--
+
+AUTOLYCUS:
+Ah take your liege,
+And I have an unsusion is nurse:
+And minist time shall say, with a moon,
+You will not breath men by any whop about the consuits from
+sone.
+
+Loud Servant:
+Tume out to the dapity more. I will be things
+And signish thy serves still
+A
+
+2017-09-06 05:37:43,416 - __main__ - INFO - epoch: 25, duration: 228s, loss: 1.38355.
+2017-09-06 05:37:43,968 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:37:43,971 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:37:43,972 - __main__ - INFO - generating with seed: " thou th".
+2017-09-06 05:37:45,622 - __main__ - INFO - generated text:
+ thou thrueds breast?
+Halt all my tongrunt sursuh's, for that;
+But the poor shall speel and wert business of the
+did threw this atcher in sincted,--where shild
+Two tutgacions, in offily, and thing-brother:
+That ships to this constate a faith, tell we
+Thou shake batter to him, my son'd.
+
+LUCENTIO:
+What, he'll greet mine so? my sir, holp not heard,
+Theirs mistress most may mind.
+
+ANGELO:
+Had thou, whileds you, sir, a pays, and take thee
+And thy book again. I may be well, banisted,
+And seen my first the forcastick son
+
+2017-09-06 05:41:35,349 - __main__ - INFO - epoch: 26, duration: 229s, loss: 1.37656.
+2017-09-06 05:41:35,652 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:41:35,655 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:41:35,656 - __main__ - INFO - generating with seed: "ght;".
+2017-09-06 05:41:37,283 - __main__ - INFO - generated text:
+ght;
+choughters to but our sister to you,
+To trown soldiers we shall frown to many by.
+
+DUKE VINCENTIO:
+But it to till a foot.
+
+FLORIZEL:
+I know thee; I can now the craws?
+
+KING RICHARD III:
+How brow your honour for our heart, with their
+softless apparel; i' the late, which shall with myself:
+And then, some's from him the county when?
+
+Servant:
+Was nothing.
+
+DUKE VINCENTIO:
+Are a so it insrent, o'erween with art they:
+And to my posian bear my better leaving to,
+Fastis to been you, to crominitar, then
+Oft thou t
+
+2017-09-06 05:45:26,813 - __main__ - INFO - epoch: 27, duration: 229s, loss: 1.37001.
+2017-09-06 05:45:27,198 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:45:27,201 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:45:27,202 - __main__ - INFO - generating with seed: "e pass
+A".
+2017-09-06 05:45:28,829 - __main__ - INFO - generated text:
+e pass
+Anochard: shall well be,
+And heaven home--will I'll maketune my trumpopens
+Here to call his free made stity--
+
+DUCHESS:
+God master; brign, I am a will blaccuse
+Thingbroke the stard,
+Or that he thou hast having so.
+
+DORSET:
+Has I sends you, madam, sir,--
+But I can nobed in madge thou hast senders?
+
+BARNARDINE:
+In an arms, toucher her moon, which instruck's,
+Howness and his looks and men he wated,
+The shoot or natersals, seen at your leads.
+And, thank you with a pricuity; say said
+This imnow my lord, make the
+
+2017-09-06 05:49:15,283 - __main__ - INFO - epoch: 28, duration: 226s, loss: 1.36381.
+2017-09-06 05:49:15,746 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:49:15,749 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:49:15,750 - __main__ - INFO - generating with seed: "hile he did bear my countenance ".
+2017-09-06 05:49:17,446 - __main__ - INFO - generated text:
+hile he did bear my countenance to die.
+I woe a friends at shall aloved tell
+In cass,
+But in her throunds here command-madok
+With sad accounts of your survart before,
+Thou must say the services here's advised;
+There'ce wells,
+Manishes and my soul be thresen from the trurive,
+And seem upin--tisilip's dogs and talk of high?
+This sicks, which it to death, thou at how, as
+it waves in the court of turn in higher,
+To this breaths, for whose compasion by his
+flings: but it is no selidy than,
+For whourd attorwick'ds my hearts to thyself;
+Why, tho
+
+2017-09-06 05:53:05,178 - __main__ - INFO - epoch: 29, duration: 227s, loss: 1.35794.
+2017-09-06 05:53:05,549 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:53:05,552 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:53:05,553 - __main__ - INFO - generating with seed: "R LAUREN".
+2017-09-06 05:53:07,204 - __main__ - INFO - generated text:
+R LAURENKC+AQI/MS(VI_/COMIjMS^^vOvjeireasp.
+
+GLOUCESTER:
+And, had I spair to him; and have marry brovient wretch
+Besign to proned an ear of yot about it with dusiness
+And play with alling.
+
+BONA:
+Geford, moor. Bood madam, sir, I will detire
+By most morn, when die, you have a saw is words.
+
+Shepherd:
+Would tyo his motter, I'll be not to the sats--
+
+DUKE VINCENTIO:
+I have most high trubnation?
+
+MEORITA:
+A constand foital.
+
+MONRANIA:
+How not insturn these armish with course?
+
+BIONDELLO:
+Short, my lord!
+
+First Murderer
+
+2017-09-06 05:56:53,942 - __main__ - INFO - epoch: 30, duration: 226s, loss: 1.35236.
+2017-09-06 05:56:54,176 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 05:56:54,179 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 05:56:54,181 - __main__ - INFO - generating with seed: "er".
+2017-09-06 05:56:55,792 - __main__ - INFO - generated text:
+ersenese them fight,
+And let them all at lief, I take it as a
+melly that.
+
+LEONTES:
+I shall by him from your sake horselous state,
+Shall have now of tasking, and to that see
+And an even to suffer to agido?
+What withy honour's duty?
+
+First RoLom:
+Had not then?
+
+POLIXENES:
+I take yurld, will hear the man that swearing's good
+whose house that wouldst parrowed to be bears this,
+Where's no prince and his widowing in his: wirl your grow'd,
+And no'en, will then to see too; without-naws!
+Or store me, and my counterma
+
+2017-09-06 06:00:48,670 - __main__ - INFO - epoch: 31, duration: 232s, loss: 1.34703.
+2017-09-06 06:00:48,999 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 06:00:49,002 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 06:00:49,004 - __main__ - INFO - generating with seed: " sti".
+2017-09-06 06:00:50,626 - __main__ - INFO - generated text:
+ stiting; thoughts, whether
+Though the bitter will be where I lience brot
+with the think fortunain apprine here. And most
+I cannot disparently do but.
+
+CORIOLANUS:
+How we'll have I sir, boint and horpest,
+Bononful traporurose full to do't, my lords
+And who hap thy less in day now wnoties
+And breadin and with her come to the may with march
+She't show his day--a home, we do's hid.
+
+Second Keeper:
+How'd my lord as the conciried maid,
+Thy hulls but a weight of the mark in the
+maid bring shall be house more from whe
+
+2017-09-06 06:04:38,120 - __main__ - INFO - epoch: 32, duration: 227s, loss: 1.34199.
+2017-09-06 06:04:38,381 - __main__ - INFO - model saved: checkpoints/mxnet_tinyshakespeare/model.params.
+2017-09-06 06:04:38,384 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 06:04:38,386 - __main__ - INFO - generating with seed: "r maid
+f".
+2017-09-06 06:04:40,020 - __main__ - INFO - generated text:
+r maid
+for the husband made with such or princesse must,
+And, to bring him for his signer, triness
+Hering are so sweet parmining at once
+As you speak not; and ne't always as therefore.
+
+Second Geers:
+Alague and sir; he shall hear speak upon
+Titles, think, whom to advised to be supt;
+Then with the shucks make man for way'd me
+He had but majesty, sir to power, turn the children,
+Fall to be sorrow to any mother.
+
+PERDITA:
+I pray you arm.
+
+CARLISANUM:
+When I had strightry
+For such rewarded, with succeed to so;
+And I sh
+
+2017-09-06 06:04:40,021 - __main__ - INFO - end of training, duration: 7348s.
+2017-09-06 06:04:40,022 - __main__ - INFO - generating 1024 characters from top 3 choices.
+2017-09-06 06:04:40,022 - __main__ - INFO - generating with seed: "was in t".
+2017-09-06 06:04:43,275 - __main__ - INFO - generated text:
+was in the command.
+
+KING EDWARD II:
+And so well and some any sorrow are
+The subjects and sour of the care and this son,
+And see the time a plays that words,
+And though you have been made and stand to thee
+To tempt that we were a monstry.
+Thoush, when have seem how she's to strike.
+
+POLIXENES:
+Shall not should have madier him to meet my life,
+Armstary and subscrue, thou and he was some
+That showed the serve as will, to be the county
+The fool, so took of the serment and my son
+The sun that she do that those the world treature.
+
+GLOUCESTER:
+Where is my like, sir, I will not be this.
+Why, sir, what, that you will not so he that have sees
+And therefore the surdench officious chief.
+
+KING EDWARD IV:
+Ay, though the caunt as true and so the case
+That hearing the patience and tranion of me,
+That she will be so to set the streaty of the
+bread and this words and a man't. Boy,
+And whether the surdens of mine as his
+life. I have seem'd, and should brieve my like and
+and to be such a presince and such a command.
+What is't thy lor

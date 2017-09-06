@@ -1,0 +1,826 @@
+2017-09-06 02:39:33,433 - utils - DEBUG - call: chainer_model.py train --checkpoint=checkpoints/chainer_tinyshakespeare/model.npz --text=data/tinyshakespeare.txt
+2017-09-06 02:39:33,434 - utils - DEBUG - ArgumentParser: Namespace(batch_size=64, checkpoint_path='checkpoints/chainer_tinyshakespeare/model.npz', clip_norm=5.0, drop_rate=0.0, embedding_size=32, learning_rate=0.001, main=<function train_main at 0x7f42df9621e0>, num_epochs=32, num_layers=2, restore=False, rnn_size=128, seq_len=64, text_path='data/tinyshakespeare.txt')
+2017-09-06 02:39:33,435 - __main__ - INFO - corpus length: 1115394.
+2017-09-06 02:39:33,750 - __main__ - INFO - model saved: checkpoints/chainer_tinyshakespeare/model.npz.
+2017-09-06 02:39:33,751 - __main__ - INFO - start of training.
+2017-09-06 02:39:33,751 - utils - INFO - number of batches: 272.
+2017-09-06 02:39:33,751 - utils - INFO - effective text length: 1114112.
+2017-09-06 02:39:33,751 - utils - INFO - x shape: (64, 17408).
+2017-09-06 02:39:33,752 - utils - INFO - y shape: (64, 17408).
+2017-09-06 02:42:07,492 - __main__ - INFO - epoch: 1, duration: 153s, loss: 2.20328.
+2017-09-06 02:42:07,492 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:42:07,492 - __main__ - INFO - generating with seed: "MIRA".
+2017-09-06 02:42:08,056 - __main__ - INFO - generated text:
+MIRATSO VIA:
+And the crod ceing to nest
+Whof hous won that my wimliduiding so hath being, tatent, he tain:
+Meror wayer homis, it banites
+I the, theed hath.
+That whos hit onselst wonest. owirunes. I woflds all thele a hit.
+
+MELIRISR:
+A chandor thoud mimed he hive hase of is byother bour sall we ben the said wumdel tinged,
+Hand wor by for bunts ilgirs frecloue her wated a duistell spice toner other thoush toul his.
+Hester tio were to leat
+Bich here thy mither in to colse ad in thesinten te mart, me she me frowid
+
+2017-09-06 02:44:42,362 - __main__ - INFO - epoch: 2, duration: 154s, loss: 2.00695.
+2017-09-06 02:44:42,363 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:44:42,363 - __main__ - INFO - generating with seed: " and yellow chapless skulls;
+Or ".
+2017-09-06 02:44:42,933 - __main__ - INFO - generated text:
+ and yellow chapless skulls;
+Or but to lord age my nunker
+Alles will bisting and whoud how fold fror of thing not my hevone, I the man:
+How sir, I hart she will.
+
+CUSENLA:
+Way thy htis a mookich and mome with the noth me fow homiend.
+
+AMION LOOS:
+He cothy the disprothour of his with, wiflestes this sacant is wee,
+Soother was one his hanks when the nortent:
+He sware a could for curchout a wandery.
+
+PUKE CININRIU:
+That is the will bot far wontishess.
+
+SOLANELE:
+For this not mithir was then.
+
+FLORY VIHE
+Nor,
+Or moon my bandevord: wist thou b
+
+2017-09-06 02:47:17,112 - __main__ - INFO - epoch: 3, duration: 154s, loss: 1.83041.
+2017-09-06 02:47:17,112 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:47:17,112 - __main__ - INFO - generating with seed: "gero".
+2017-09-06 02:47:17,664 - __main__ - INFO - generated text:
+gerokny;
+But to me he cought marring sir,
+Where your my spurs of a pure and as mathers
+I came but is mane how and so way
+A willl be my scack me conpends,
+And, him so mery by to them his sut by shim?
+
+DEKE VINDETO:
+But the bour these one.
+
+DUK AFCENNIO:
+What wows at a we see there in that dence,
+And an of and and, thou hand, who caming wender, his healty
+To moure with sir.
+What in to my the deniend trut.
+
+BROCTONY:
+This wempts, have sound with, you wile, it thee to not
+Thou we shair amon on hew,
+To meing tinglan
+
+2017-09-06 02:49:52,011 - __main__ - INFO - epoch: 4, duration: 154s, loss: 1.75116.
+2017-09-06 02:49:52,012 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:49:52,012 - __main__ - INFO - generating with seed: "traitor to the crown
+In followin".
+2017-09-06 02:49:52,585 - __main__ - INFO - generated text:
+traitor to the crown
+In following my boning all woud to so ampathe of hour wown to
+do the call: I'rn anger, be mading of terp hy wence,
+The king-boor a swurs, stays our marriend:
+And what's shall shall not to her art with'd and,
+That I part that wold our thince twith to,
+With you lear seems of harn you's me.
+I have mowelf what you like to throw wido, so pity;
+Of live you coumens an a saut as
+Which yef as, swist stakes the sauch, and not shoil
+nest case the fathes bethen with am whears of my suped
+Os this panding and her, whilch thee:
+Aunt
+
+2017-09-06 02:52:26,734 - __main__ - INFO - epoch: 5, duration: 154s, loss: 1.68952.
+2017-09-06 02:52:26,734 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:52:26,734 - __main__ - INFO - generating with seed: "with the deep--mouth'd brach.
+Sa".
+2017-09-06 02:52:27,319 - __main__ - INFO - generated text:
+with the deep--mouth'd brach.
+Sarroughtay.
+
+GEONDOLO:
+Thou let so blesmen a dearing to prepoland
+Why tike a heart many of my lond,
+With hears with so supfarment; to see to honane:
+Hows too the bout thing and drom of intuly
+And sempons!
+
+ASHOMENES:
+I make, fachisic brine time is it it heaven ough
+And tase one such so mine it she death.
+
+ANTERIO:
+Why, then have not an theer as this ney,
+Bust is the hand madured wo blungian almes thas begtance to dear bear.
+I tell you, my prowasies. Why sumsing my day,
+The peetting on the swings for ancent,
+
+
+2017-09-06 02:55:01,949 - __main__ - INFO - epoch: 6, duration: 154s, loss: 1.6205.
+2017-09-06 02:55:01,951 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:55:01,952 - __main__ - INFO - generating with seed: ", rank-scented many, let them
+Re".
+2017-09-06 02:55:02,652 - __main__ - INFO - generated text:
+, rank-scented many, let them
+Remife thy franted his friend; he all, by may bokincest me
+Of talk of it as by a mains.
+
+AFELIADA:
+That so him sters you make my souls all foul moried,
+And bether hell talk with me sue sad woth my-larck.
+On with our capently too, tought to make.
+
+DUKE VINCENTIO:
+When in whine take you stean yet are toon them
+beln in indo would not so'd ties:
+I cannot him beself heaven, batin in his counding.
+
+BETRUCHIO:
+O, say: you have crues your clough the homred,
+In by thou confest till be and whiles
+And so disfiet to port
+
+2017-09-06 02:57:36,616 - __main__ - INFO - epoch: 7, duration: 153s, loss: 1.56866.
+2017-09-06 02:57:36,616 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 02:57:36,616 - __main__ - INFO - generating with seed: "hi".
+2017-09-06 02:57:37,165 - __main__ - INFO - generated text:
+hit again
+Tell thee he come shold of that womb take one baswer my lord
+Struntst thou to by all he her come from buble banon's
+The garent to a son after?
+
+LUCIO:
+A head why sucems and liver, therefore father;
+Anwide of your house obed; will be stranity fear?
+
+Seponrir:
+O, my, seep never! I'll print the bose the course?
+What, her bite, and led the deever he will be wook, with a hang an is broal
+As I do her him him take the grue weet he him,
+This nother sin havour's pautions, of, to-now mine of to win thou bet
+A
+
+2017-09-06 03:00:12,161 - __main__ - INFO - epoch: 8, duration: 154s, loss: 1.53299.
+2017-09-06 03:00:12,162 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:00:12,162 - __main__ - INFO - generating with seed: "y's love against some other maid".
+2017-09-06 03:00:12,737 - __main__ - INFO - generated text:
+y's love against some other maid issue
+Seem to have a world's sounts main, with my grieve
+Thee fail that's master wisk of the dound, have harn wakell.
+The lease me; courth'd him hear of it soon,
+Thou hein am in the hands the moven'd,
+Which too, in he'd and a seeks the compostary'd
+Move have moughters it that may when the fill.
+Well you should, sir, with who loss.
+Which town sumps him, in my bagning and hams, burse,
+Faition'd this attern wrong'st;
+The waswards, her: 'to too begin of his her fight well.
+
+FLORIZEL:
+No, we hass sir.
+
+ANTLONUS
+
+2017-09-06 03:02:46,855 - __main__ - INFO - epoch: 9, duration: 154s, loss: 1.49834.
+2017-09-06 03:02:46,855 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:02:46,855 - __main__ - INFO - generating with seed: "ul son.
+
+LUCENTI".
+2017-09-06 03:02:47,421 - __main__ - INFO - generated text:
+ul son.
+
+LUCENTIO:
+Nothing since! I marry we take
+Sospetuse wank.
+
+POMPEY:
+What, wispy, Ispult should crown tonguial than am,
+So then sight to tonstart of my holy?
+
+POLIXENES:
+I thence is not the spold, swear and messes twilk;
+She write of confition for within timenes.
+
+ROMEO:
+Her he husband his mean on the bound must day.
+
+Sentent:
+Then with be nights.
+
+PETRUCHIO:
+My love,--
+
+RAPIEL:
+Where, than you hear man you and with your son.
+
+CORIOLANUS:
+How! which her-was one infection of dack,
+She longeance and his such a shave be
+
+2017-09-06 03:05:22,272 - __main__ - INFO - epoch: 10, duration: 154s, loss: 1.46976.
+2017-09-06 03:05:22,272 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:05:22,273 - __main__ - INFO - generating with seed: "a name
+I know not how to tell th".
+2017-09-06 03:05:22,846 - __main__ - INFO - generated text:
+a name
+I know not how to tell their father's bed.
+He'er my great brock suppy speet one
+They she will comb to have the givimence.
+Seldening in his cave here, set you prive you:
+Gray the time hence as ourthing of this hath maid
+Whot so not the heart, thou did him that will'd too
+To his lise anwain, and I'll thereforairs.
+Hath be as hiss with much some for my life?
+
+BUCKINGHAM:
+Storn are nob with a mind his children,--
+
+GrAMIS:
+But before with myself, tremply hence man,
+Which to speak all crown.
+
+Lord Mauryer:
+So speak; and not banishiness o
+
+2017-09-06 03:07:56,210 - __main__ - INFO - epoch: 11, duration: 153s, loss: 1.44489.
+2017-09-06 03:07:56,210 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:07:56,211 - __main__ - INFO - generating with seed: " cam".
+2017-09-06 03:07:56,761 - __main__ - INFO - generated text:
+ camine
+Hear times as sworn in his charive to the pray
+Had somen and scorn that is this best brock.
+O, strengthe woo, is many shepherds?
+
+BIANGAL:
+No, a say, say, alitate, and I sither.
+
+ANTOPE:
+Whether fow you age siccess, sund they two with him
+To sevenged me with an heart with the people.
+
+DOFY OLVI:
+Where is the such sir. He'r than there is to him.
+Thy power to the cause in horses and toward;
+And should not there's now'd to my feighthem,
+Who do not thou turn and helsed and be his friend.
+All house, test a b
+
+2017-09-06 03:10:31,753 - __main__ - INFO - epoch: 12, duration: 154s, loss: 1.43325.
+2017-09-06 03:10:31,753 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:10:31,753 - __main__ - INFO - generating with seed: "lt,
+I departed n".
+2017-09-06 03:10:32,313 - __main__ - INFO - generated text:
+lt,
+I departed not be wink and
+Which we do so bid him? O'ercy, my light.
+
+AUTOLYCUS:
+How is hear it so shall not with here
+By think? 'Titul't to leady your giom
+That I come carment them be at other fly forty,
+Till I was secuntly fay, the blood their wrost:
+I stand men the glive and made it as me.
+
+LUCENTIO:
+Why at say, am her send as a fectility!
+How mether of wonks the high and conciling?
+She without her heart on the pose,
+Scausimented him a they poor bethy to be tears:
+And my good men your lords, take off
+And she well sh
+
+2017-09-06 03:13:06,871 - __main__ - INFO - epoch: 13, duration: 154s, loss: 1.40113.
+2017-09-06 03:13:06,871 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:13:06,871 - __main__ - INFO - generating with seed: "nt".
+2017-09-06 03:13:07,427 - __main__ - INFO - generated text:
+ntigr otenty she
+To-lliging soul in sick of thy sure.
+
+CAMILLO:
+The murch.
+
+LADY CENGRHA:
+The lass to a be denecife too may not in my life.
+
+CLARENCE:
+But not meation, be neither's witery,
+Surn too tears are as heathing the specting;
+And troughtery mistake mishit, and a provint.
+
+KING RICHARD III:
+Would sir, to be his lady what state.
+O, say within. He convilous of courted;
+When all fear his counterford's name:
+So say and with this all; and whose
+I save some lease of must wald is how,
+My fermower hearing, the
+
+2017-09-06 03:15:41,774 - __main__ - INFO - epoch: 14, duration: 154s, loss: 1.40249.
+2017-09-06 03:15:41,774 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:15:41,774 - __main__ - INFO - generating with seed: "ully;
+God and Saint George! Rich".
+2017-09-06 03:15:42,351 - __main__ - INFO - generated text:
+ully;
+God and Saint George! Riches me; for you:
+I have sisford: thou she we seems; will here cowergaus
+With wase me, thying me tauted she hatisfessable,
+Thing mine steplate him. Now't with him?
+
+ROMEOS:
+O, thou mist, why my sisp then the pity.
+
+BRUTUS:
+Why, thou so should not to save me not
+Than the troker, and mother stair? who since hear her?
+
+GONZALO:
+Be not hour with such nevel brother, and thou shemes.
+
+KATHARINA:
+The pity hampany maid, we most same as you
+here in so fair father stump his bast?
+
+POMPEY:
+Sir, when thou that treesest t
+
+2017-09-06 03:18:16,758 - __main__ - INFO - epoch: 15, duration: 154s, loss: 1.38273.
+2017-09-06 03:18:16,759 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:18:16,759 - __main__ - INFO - generating with seed: "nian trull,
+Upon".
+2017-09-06 03:18:17,330 - __main__ - INFO - generated text:
+nian trull,
+Upon her heart of say, and not said
+These never let him so few their seedent:
+Thy daughty senise fresh to me,
+Tremblant, my spoth it. Who, I have seek to poster hath,
+Then say wither bowing. I must her feing have
+And which now took, thy mother could seeming;
+For I am now walk she hath appenious
+The ship shaing so somethis with me: which his part that
+And tyous of it at time often for thee
+In head o' my choit on eat my bloody.
+
+Sendlat:
+Who, no, murns all foot he should call me when I must turn.
+Where is the sin
+
+2017-09-06 03:20:51,870 - __main__ - INFO - epoch: 16, duration: 154s, loss: 1.37663.
+2017-09-06 03:20:51,871 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:20:51,871 - __main__ - INFO - generating with seed: "SHOP OF ".
+2017-09-06 03:20:52,425 - __main__ - INFO - generated text:
+SHOP OF heack;?
+Sway betwears, my country, but that my cheek, as I
+pern me; the least facting of that suice?
+
+PETRUCHIO:
+If my hearts short our takest have sheepss.
+But servant, beseeming of your soldiers,
+Mus are not have you hear accihes in his week now,
+Or honusey, and no dangerence.
+
+DUKE VINCENTIO:
+The came to be thee those her to me,
+To sease. Come, we call me here, we come and sweet hither:
+Sholes the city mints, he were to plaint to hear:
+I hort of this woman the dangerous petier;
+I to see her been out of t
+
+2017-09-06 03:23:27,410 - __main__ - INFO - epoch: 17, duration: 154s, loss: 1.36534.
+2017-09-06 03:23:27,410 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:23:27,410 - __main__ - INFO - generating with seed: "such".
+2017-09-06 03:23:27,962 - __main__ - INFO - generated text:
+suche,
+Fill with the dares for you bawl of shouldst so bear abame
+I too the thunt with a motions with danger:
+But standelled in the what is mad me to't.
+
+ARIEL:
+Ay, bate, the ports and shemest the selse to comilely
+And wheether by selves for thee, for so?
+
+ANTONIA:
+Yet the flatterer, buisp'd beseen me,
+Bawners her husband, my fear with him to semple;
+Which with him invented, are confeds from him trust her cheeks.
+How, bet my house at you at all to shame
+Her prophem far your willing and speak,
+Which that hath se
+
+2017-09-06 03:26:02,318 - __main__ - INFO - epoch: 18, duration: 154s, loss: 1.36233.
+2017-09-06 03:26:02,319 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:26:02,319 - __main__ - INFO - generating with seed: "e!".
+2017-09-06 03:26:02,972 - __main__ - INFO - generated text:
+e!nx good wither,
+Swear the devil'd on solesters with you marks
+Was yourself on the first--felery
+Tales to still men's: you then, and showest the shem, but
+He will so lord's same, my loving to my head.
+And ill was but for he is, but not see well, were
+comboted he may age, betick to me is.
+
+ANGELO:
+What I mend, by the briefter-brishenia?
+I say it in all mere shall be some belor.
+
+PROSPERO:
+Alemy, sir my mother, souls their children's dound
+And noth face by they floward thy hass.
+
+SICINIUS:
+Yet are not we would
+
+2017-09-06 03:28:36,880 - __main__ - INFO - epoch: 19, duration: 153s, loss: 1.35177.
+2017-09-06 03:28:36,881 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:28:36,881 - __main__ - INFO - generating with seed: " Pla".
+2017-09-06 03:28:37,438 - __main__ - INFO - generated text:
+ Playess death
+Away, and a word.
+
+BRAKENBURY:
+I stand stoppises steel, I how them now.
+
+BARTAIUS:
+The last to breathe sir; but the moured soul, a most
+death how he be propilloase and sound
+That which I price thee we be thwine of you would
+The willench solus weddest to a throngs that way,
+And many selcourt and work your seemity's words!
+I have some such fiery beseech those at success:
+And I have done to speece and better how true.
+
+ROMEO:
+A corrue your: how tonded by them so mock;
+The perceives he sufference to-
+
+2017-09-06 03:31:12,163 - __main__ - INFO - epoch: 20, duration: 154s, loss: 1.35776.
+2017-09-06 03:31:12,163 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:31:12,164 - __main__ - INFO - generating with seed: "r,".
+2017-09-06 03:31:12,715 - __main__ - INFO - generated text:
+r,.;:
+When shall I trump of the seats friend
+Till you have mask too much;
+They with him.
+
+First Senot,
+I'ar Gaunt;
+But tell her best trucking in my brothers:
+Therefore we sheeps had no man in your freshing
+Why bold of the consumeman, by the worsk,
+And a power all trupt his harlet.
+
+BRUCUTUS:
+I'll be since, what were no means some six.
+
+KATHARINA:
+Why, all sees me the sun of his father's lorse.
+O sir.
+
+ARCHIDARDUNI:
+And thou hence will crued your life and witents
+Told tell you.
+
+SEBASTIAN:
+That bear the times,
+
+2017-09-06 03:33:47,074 - __main__ - INFO - epoch: 21, duration: 154s, loss: 1.3334.
+2017-09-06 03:33:47,074 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:33:47,075 - __main__ - INFO - generating with seed: "an by his own alms empoison'd,
+A".
+2017-09-06 03:33:47,659 - __main__ - INFO - generated text:
+an by his own alms empoison'd,
+And take the burst to dined his house:
+His now, which here with some accame crmit'd slain.
+Hast he cause it onces son, wilt no booble.
+Welcome my common.
+Now, me, good soul, as a father in the brick
+And my seeken thou do acciken, is born.
+
+KING RICHARD II:
+In purshing to soul honours imprise by me
+The days; swe't an an entrior and my hours, sir?
+In makes time by their truty's best;
+But in ere I cannot bear me, when awake the
+prove me intentenence in the pitter.
+
+CORIOLANUS:
+There hope they do sollo, at suppl
+
+2017-09-06 03:36:21,934 - __main__ - INFO - epoch: 22, duration: 154s, loss: 1.31603.
+2017-09-06 03:36:21,934 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:36:21,934 - __main__ - INFO - generating with seed: " convent".
+2017-09-06 03:36:22,496 - __main__ - INFO - generated text:
+ conventy head,
+And here not a did now to the shame
+May tell me and has a breathest calard,
+To do a sen of hours, and not wonder.
+
+BROTSA:
+Sir these!
+What, with him, we what he did the rasy,
+From this wide twice man all as this tarch's love,
+That dost music appersed me old my
+bellovel to bring me strange out with steel.
+
+LEONTE:
+This womar wised to all this wisdone, by this, thine heavens,
+And saw no much on any of this is the weep:
+He shespeats that self she nails incite mine.
+Mork him of this dukeless within to d
+
+2017-09-06 03:38:56,771 - __main__ - INFO - epoch: 23, duration: 154s, loss: 1.31793.
+2017-09-06 03:38:56,772 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:38:56,772 - __main__ - INFO - generating with seed: ":
+My lord, 'tis nothing.
+
+DUKE O".
+2017-09-06 03:38:57,352 - __main__ - INFO - generated text:
+:
+My lord, 'tis nothing.
+
+DUKE OF YORK:
+This, thou thy love to trails, whose commont time
+Fie thither with a fire, took time of hand?
+
+First God:
+Ay, they! what wave suit be at this mattel:
+My day with me weet by by, but saves to thine eyes
+Who wound frown that satisfied in't;
+Were news, tree so, the word: I will be done
+Whilst you are many last his changed to some still,
+Which silence with hour so hearts, as how,
+Who is, I was so, from your man, sir, breathest now,
+My found well with the matter.
+
+BENVOLIO:
+Might to crongeth cliens athal,
+
+2017-09-06 03:41:31,729 - __main__ - INFO - epoch: 24, duration: 154s, loss: 1.29501.
+2017-09-06 03:41:31,729 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:41:31,730 - __main__ - INFO - generating with seed: "brown thread: I ".
+2017-09-06 03:41:32,292 - __main__ - INFO - generated text:
+brown thread: I arreak was dount.
+But music with storch'd his lordsheches!
+It speaks, and there to be so again?
+
+COMINIUS:
+O, sir?
+
+BAPTISTA:
+I am my lord.
+
+CAGILLA:
+Well, and a peace! O that, they shall not but meat sweet
+Against the mark, and loward him.
+
+Second Gentleman:
+Mass be a friar, how now, good, and live your hate,
+Clarmen for may not me for thee, sir!
+
+ROMEO:
+And, and mark thy glass or hard yours, but the day
+On wife: I cale no murdered; yet that we well;
+And with soldiers with down from the hearing-life
+And so
+
+2017-09-06 03:44:07,064 - __main__ - INFO - epoch: 25, duration: 154s, loss: 1.30117.
+2017-09-06 03:44:07,064 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:44:07,064 - __main__ - INFO - generating with seed: "conferen".
+2017-09-06 03:44:07,623 - __main__ - INFO - generated text:
+conferens arm,
+And her satisfy: to she bad and may being.
+
+Servant:
+What thou, my grave asleess outchased?
+
+First Gentleman:
+You are her, here thou would be so wounds be complection.
+
+CLARENCA:
+And, take the duke ye it but both.
+
+DUKE OF YORK:
+My sweet.
+But it, mockly ababures had been me, she
+would be as for your face. Come, so let that make
+thee to the time show him, my staties of your silence.
+Ah, my lord, and was fornity on, been hath
+to my mountly swarest blue forth she might fift.
+All the sure of my way, so,'
+
+2017-09-06 03:46:41,374 - __main__ - INFO - epoch: 26, duration: 153s, loss: 1.27951.
+2017-09-06 03:46:41,375 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:46:41,375 - __main__ - INFO - generating with seed: "to bring him
+Whe".
+2017-09-06 03:46:41,934 - __main__ - INFO - generated text:
+to bring him
+Where tell with me, in that's meet, and say
+But I cannot be shall ask the fire.
+
+Shepherd:
+Wite, my togembrobs meet's,
+Arace tell your brother of the mountlius:
+For this dear,
+When I cannot banish'd on thy specent
+We honest calls of her hurse, but how they bear.
+If all the wreck some fool and his most recok.
+
+LADENN:
+Nor well to try too-shor, wilt make his cherk,
+O mother sweet more whom makes the dear again:
+Therefore come to him: it is it did, my heart,
+Not to do at flantation, and when thou wert thy mere,
+T
+
+2017-09-06 03:49:16,836 - __main__ - INFO - epoch: 27, duration: 154s, loss: 1.2678.
+2017-09-06 03:49:16,836 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:49:16,836 - __main__ - INFO - generating with seed: "ond?
+
+RATCLIFF:
+".
+2017-09-06 03:49:17,408 - __main__ - INFO - generated text:
+ond?
+
+RATCLIFF:
+No, my good sweet maliset a mighty, and a sour than
+The law or hearing with thy destain, and how to his
+mothing hath trumpets but to help you all, the dispers,
+On my self it?
+
+PROSPERO:
+Whilst, thou dryalth have no right.
+
+SAMPSOLAN:
+Sir?
+
+LEONTES:
+O Go, my good willow, good will you curse;
+Ay, any man, and what? stild-cerear, that I will respeteen
+Angent, we must, millious.
+
+MIRANDA:
+The letter thines within myself,
+I would are the dream'd a last follow to pace to
+A throne; the soul agreen look'd on the co
+
+2017-09-06 03:51:50,665 - __main__ - INFO - epoch: 28, duration: 153s, loss: 1.25535.
+2017-09-06 03:51:50,665 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:51:50,665 - __main__ - INFO - generating with seed: " of the king:
+I dare adventure t".
+2017-09-06 03:51:51,237 - __main__ - INFO - generated text:
+ of the king:
+I dare adventure that it and safe our grace.
+She have towers, had that may past itself'd; hereol thee
+Is thy welch, we have wombrage with sit
+Where this have thee showility and do should chome;
+In this.
+
+BRAKENBURY:
+A charced mouth, an empty time to
+Has sad fediclany as, both haste
+Her late.
+
+PERDITE:
+How, what neary so?
+I water well fearful's world,
+An sleen taking, how to be dallible bringed;
+And your labating by mind, and malk'd at you?
+
+GONZALO:
+Nay, we had such both and beliver sad
+With souly created for factest she hit
+
+2017-09-06 03:54:25,863 - __main__ - INFO - epoch: 29, duration: 154s, loss: 1.24639.
+2017-09-06 03:54:25,863 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:54:25,863 - __main__ - INFO - generating with seed: ": le".
+2017-09-06 03:54:26,423 - __main__ - INFO - generated text:
+: letter
+The power in her heirs in evate are men,
+And so must be second by cannot-cat,
+The people on the fill and was his part of my lord,
+To be times by so duke frown with the wind miles
+And that fair being with with your freshing foe:
+Yet not my lord, so phoper things summer
+Of him.
+
+MONTAGUE:
+Yea, here comes to to my honour.
+
+LADY GREY:
+This sworror hour and themself.
+
+FRIAR LAURENCE:
+Titundle hence, if you are no more,
+Be pause and pertued held as twenty sin:
+It should not strives to dividst heart of your c
+
+2017-09-06 03:56:59,268 - __main__ - INFO - epoch: 30, duration: 152s, loss: 1.2398.
+2017-09-06 03:56:59,268 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:56:59,268 - __main__ - INFO - generating with seed: "cord".
+2017-09-06 03:56:59,817 - __main__ - INFO - generated text:
+cordOr- Ill calle.
+
+SLY:
+I saw he take her heaven fair can will, how
+As her lamenty we are tormal
+And blood is a thought for some teach it.
+
+PRINCE EDWARD:
+O first, the best; yet had
+Is this whores this lord's considered
+And fareless in such was flatterit home,
+Hath muse I abbudble the does towered wime,
+I am men worrife, her high to be hearent
+Adums;' Omab against the marked to-nighty;
+For the state. They be dredest thou didst have seven agin.
+Swear it, sigaf, there stirr'd a biggard at are yearling faults mor
+
+2017-09-06 03:59:33,802 - __main__ - INFO - epoch: 31, duration: 153s, loss: 1.23572.
+2017-09-06 03:59:33,803 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 03:59:33,803 - __main__ - INFO - generating with seed: "hee!
+
+SAMPSON:
+Let us take the l".
+2017-09-06 03:59:34,379 - __main__ - INFO - generated text:
+hee!
+
+SAMPSON:
+Let us take the least: my news, whereons, youth with heart me
+As for your people of the pass; and I
+as thou thy substant on him such brows some
+With troak as horses in heaven: I would have been,
+And so most assuranish'd?
+
+DUKE OF AUMERLE:
+Nay, the heavens seem of wife, when, sigh'd by:
+Some sorrows.
+
+CORIOLANUS:
+You coundemn, I will have leave you may do there,
+Tybrey to help'd. Bown with a generage!
+Which is this speeder man, in peace of your wife,
+My life and sin, as acception:
+The missings at the better believes, to be
+t
+
+2017-09-06 04:02:07,907 - __main__ - INFO - epoch: 32, duration: 153s, loss: 1.2293.
+2017-09-06 04:02:07,907 - __main__ - INFO - generating 512 characters from top 10 choices.
+2017-09-06 04:02:07,907 - __main__ - INFO - generating with seed: "ing tears?
+As thus, to drop them".
+2017-09-06 04:02:08,485 - __main__ - INFO - generated text:
+ing tears?
+As thus, to drop them a wind bravel well soldier,
+As thoughts me so marked the wars'd of you
+The bill of heaven of times on some contrary.
+
+CAPULET:
+Ay, what we cloudds, speak forth for fools whiles
+Her season with the dukedom as most could swear to
+souls not one to thy hundred blood.
+
+Second Gentleman:
+Will I have look fair and my weighty arm,
+Seizony of the would two would not best thou the
+ratily thousand a head of my master!
+Where's so, how further, so heaven, was a worth
+I mean the wife of two felse, I know
+Here shall stil
+
+2017-09-06 04:02:08,485 - __main__ - INFO - end of training, duration: 4954s.
+2017-09-06 04:02:08,486 - __main__ - INFO - generating 1024 characters from top 3 choices.
+2017-09-06 04:02:08,486 - __main__ - INFO - generating with seed: "l-seeming, thick, bereft of beau".
+2017-09-06 04:02:09,611 - __main__ - INFO - generated text:
+l-seeming, thick, bereft of beauty,
+And, sir, the worse of his provost of my servant.
+This shall see thee and a son of the cause
+Than tell myself to the seas of thiest and so stone
+That will be shame the contrary to him as her
+As the winter to him,
+As to this be too sease, and the worst.
+
+BIONDELLO:
+I say, and we will be the words, where it will
+she's so broked thee, take her sour to the common
+As the meen of thy soul true.
+
+PETRUCHIO:
+A master with thy heir and this way he will stay.
+
+GLOUCESTER:
+Whan thou show me to my sword, a part them should be
+Than the people and an old sun without to
+conceive the sun, and the world, as thou stop
+Whoses so stone of the cape thee at the deed,
+With such assure to see the counsel is to his
+make my lady of his son will not best,
+And there that she's a marked and a promised her best
+And strict of heaven as then, she will be
+speed it is assured where they are some often as
+The sun shall should not bring the sun her brief,
+And the sun when have mercy a man things,
+And the storm to the stronger shall here to
