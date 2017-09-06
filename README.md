@@ -38,7 +38,10 @@ This repository attempts to replicate the models, with slight modifications, in 
 ## Setup
 
 ```bash
+# create conda environment
 conda env create -f=environment.yml
+# activate environment
+source activate dl
 ```
 
 ## Usage
@@ -91,6 +94,14 @@ python tf_model.py train \
     --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
     --text=data/tinyshakespeare.txt
 ```
+
+Sample logs:
+
+- [`keras_model.log`](logs/keras_model.log)
+- [`tf_model.log`](logs/tf_model.log)
+- [`pytorch_model.log`](logs/pytorch_model.log)
+- [`chainer_model.log`](logs/chainer_model.log)
+- [`mxnet_model.log`](logs/mxnet_model.log)
 
 ### Text Generation
 
@@ -158,3 +169,15 @@ Whishe it is no meach of my lard and
 And this, and with my love and the senter'd with marked
 And her should
 ```
+
+## Benchmarks
+
+Below are training duration and loss on [`tinyshakespeare.txt`](data/tinyshakespeare.txt).
+
+| Framework  | Duration (s) | Loss    |
+|------------|--------------|---------|
+| Keras      | 5270         | 1.42505 | 
+| TensorFlow | 3003         | 1.45795 | 
+| PyTorch    | 5868         | 1.32285 | 
+| Chainer    | 4954         | 1.22930 | 
+| MXNet      | 7348         | 1.34199 | 
