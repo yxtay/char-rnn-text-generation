@@ -138,8 +138,6 @@ def sample_from_probs(probs, top_n=10):
 ###
 
 def main(framework, train_main, generate_main):
-    logger = get_logger(__name__, console=True)
-
     arg_parser = ArgumentParser(
         description="{} character embeddings LSTM text generation model.".format(framework))
     subparsers = arg_parser.add_subparsers(title="subcommands")
@@ -171,6 +169,8 @@ def main(framework, train_main, generate_main):
                               help="training batch size (default: %(default)s)")
     train_parser.add_argument("--num-epochs", type=int, default=32,
                               help="number of epochs for training (default: %(default)s)")
+    train_parser.add_argument("--log-path", default=os.path.join(os.path.dirname(__file__), "main.log"),
+                              help="path of log file (default: %(default)s)")
     train_parser.set_defaults(main=train_main)
 
     # generate args
@@ -184,9 +184,13 @@ def main(framework, train_main, generate_main):
                                  help="length of character sequence to generate (default: %(default)s)")
     generate_parser.add_argument("--top-n", type=int, default=3,
                                  help="number of top choices to sample (default: %(default)s)")
+    generate_parser.add_argument("--log-path", default=os.path.join(os.path.dirname(__file__), "main.log"),
+                                 help="path of log file (default: %(default)s)")
     generate_parser.set_defaults(main=generate_main)
 
     args = arg_parser.parse_args()
+    get_logger("__main__", log_path=args.log_path, console=True)
+    logger = get_logger(__name__, log_path=args.log_path, console=True)
     logger.debug("call: %s", " ".join(sys.argv))
     logger.debug("ArgumentParser: %s", args)
 

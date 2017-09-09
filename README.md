@@ -38,8 +38,12 @@ This repository attempts to replicate the models, with slight modifications, in 
 ## Setup
 
 ```bash
+# clone repo
+git clone git@github.com:yxtay/char-rnn-text-generation.git && cd char-rnn-text-generation
+
 # create conda environment
 conda env create -f=environment.yml
+
 # activate environment
 source activate dl
 ```
@@ -49,24 +53,26 @@ source activate dl
 ### Training
 
 ```
-usage: <framework>_model.py train [-h] --text-path TEXT_PATH --checkpoint-path
-                                  CHECKPOINT_PATH [--restore [RESTORE]]
+usage: <framework>_model.py train [-h] --checkpoint-path CHECKPOINT_PATH 
+                                  --text-path TEXT_PATH
+                                  [--restore [RESTORE]]
                                   [--seq-len SEQ_LEN]
                                   [--embedding-size EMBEDDING_SIZE]
-                                  [--rnn-size RNN_SIZE] [--num-layers NUM_LAYERS]
+                                  [--rnn-size RNN_SIZE] 
+                                  [--num-layers NUM_LAYERS]
                                   [--drop-rate DROP_RATE]
                                   [--learning-rate LEARNING_RATE]
                                   [--clip-norm CLIP_NORM] 
                                   [--batch-size BATCH_SIZE]
                                   [--num-epochs NUM_EPOCHS]
+                                  [--log-path LOG_PATH]
 
 optional arguments:
   -h, --help            show this help message and exit
+  --checkpoint-path CHECKPOINT_PATH
+                        path to save or load model checkpoints
   --text-path TEXT_PATH
                         path of text file for training
-  --checkpoint-path CHECKPOINT_PATH
-                        path to save or load model checkpoints; tensorboard
-                        logs will be saved in the same directory
   --restore [RESTORE]   whether to restore from checkpoint_path or from
                         another path if specified
   --seq-len SEQ_LEN     sequence length of inputs and outputs (default: 64)
@@ -85,6 +91,7 @@ optional arguments:
                         training batch size (default: 64)
   --num-epochs NUM_EPOCHS
                         number of epochs for training (default: 32)
+  --log-path LOG_PATH   path of log file (default: main.log)
 ```
 
 Example:
@@ -109,6 +116,7 @@ Sample logs:
 usage: <framework>_model.py generate [-h] --checkpoint-path CHECKPOINT_PATH
                                      (--text-path TEXT_PATH | --seed SEED)
                                      [--length LENGTH] [--top-n TOP_N]
+                                     [--log-path LOG_PATH]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -120,6 +128,7 @@ optional arguments:
   --length LENGTH       length of character sequence to generate (default:
                         1024)
   --top-n TOP_N         number of top choices to sample (default: 3)
+  --log-path LOG_PATH   path of log file (default: main.log)
 ```
 
 Example:

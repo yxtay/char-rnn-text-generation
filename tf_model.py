@@ -330,5 +330,4 @@ def generate_main(args):
 
 
 if __name__ == "__main__":
-    logger = get_logger(__name__, console=True)
     main("TensorFlow", train_main, generate_main)

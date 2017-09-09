@@ -285,5 +285,4 @@ def generate_main(args):
 
 
 if __name__ == "__main__":
-    logger = get_logger(__name__, console=True)
     main("Chainer", train_main, generate_main)
