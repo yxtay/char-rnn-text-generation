@@ -10,6 +10,10 @@ from logger import get_logger
 
 logger = get_logger(__name__)
 
+###
+# file system
+###
+
 
 def make_dirs(path, empty=False):
     """
@@ -27,10 +31,18 @@ def make_dirs(path, empty=False):
     return dir_path
 
 
+def path_join(*paths, empty=False):
+    """
+    join paths and create dir
+    """
+    path = os.path.abspath(os.path.join(*paths))
+    make_dirs(os.path.dirname(path), empty)
+    return path
+
+
 ###
 # data processing
 ###
-
 
 def create_dictionary():
     """
@@ -106,7 +118,6 @@ def batch_generator(sequence, batch_size=64, seq_len=64, one_hot_features=False,
 # text generation
 ###
 
-
 def generate_seed(text, seq_lens=(2, 4, 8, 16, 32)):
     """
     select subsequence randomly from input text
@@ -145,9 +156,9 @@ def main(framework, train_main, generate_main):
     # train args
     train_parser = subparsers.add_parser("train", help="train model on text file")
     train_parser.add_argument("--checkpoint-path", required=True,
-                              help="path to save or load model checkpoints")
+                              help="path to save or load model checkpoints (required)")
     train_parser.add_argument("--text-path", required=True,
-                              help="path of text file for training")
+                              help="path of text file for training (required)")
     train_parser.add_argument("--restore", nargs="?", default=False, const=True,
                               help="whether to restore from checkpoint_path "
                                    "or from another path if specified")
@@ -176,7 +187,7 @@ def main(framework, train_main, generate_main):
     # generate args
     generate_parser = subparsers.add_parser("generate", help="generate text from trained model")
     generate_parser.add_argument("--checkpoint-path", required=True,
-                                 help="path to load model checkpoints")
+                                 help="path to load model checkpoints (required)")
     group = generate_parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--text-path", help="path of text file to generate seed")
     group.add_argument("--seed", default=None, help="seed character sequence")
