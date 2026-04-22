@@ -5,22 +5,26 @@ import time
 import numpy as np
 from tqdm import tqdm
 
+import utils
 import tensorflow as tf
 from tensorflow.contrib import layers, rnn
 from tensorflow.contrib.tensorboard.plugins import projector
 
 from logger import get_logger
-from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
-                   make_dirs, sample_from_probs, VOCAB_SIZE)
+from utils import (batch_generator, corpus_for_training_epoch, encode_text,
+                   generate_seed, ID2CHAR, list_training_text_files, main,
+                   make_dirs, resolve_seed_text_file, sample_from_probs)
 
 logger = get_logger(__name__)
 
 
-def build_infer_graph(x, batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
+def build_infer_graph(x, batch_size, vocab_size=None, embedding_size=32,
                       rnn_size=128, num_layers=2, p_keep=1.0):
     """
     builds inference graph
     """
+    if vocab_size is None:
+        vocab_size = utils.VOCAB_SIZE
     infer_args = {"batch_size": batch_size, "vocab_size": vocab_size,
                   "embedding_size": embedding_size, "rnn_size": rnn_size,
                   "num_layers": num_layers, "p_keep": p_keep}
@@ -107,12 +111,14 @@ def build_train_graph(loss, learning_rate=0.001, clip_norm=5.0):
     return model
 
 
-def build_model(batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
+def build_model(batch_size, vocab_size=None, embedding_size=32,
                 rnn_size=128, num_layers=2, p_keep=1.0, learning_rate=0.001,
                 clip_norm=5.0, build_eval=True, build_train=True):
     """
     builds model end-to-end, including data placeholders and saver
     """
+    if vocab_size is None:
+        vocab_size = utils.VOCAB_SIZE
     model_args = {"batch_size": batch_size, "vocab_size": vocab_size,
                   "embedding_size": embedding_size, "rnn_size": rnn_size,
                   "num_layers": num_layers, "p_keep": p_keep,
@@ -128,7 +134,7 @@ def build_model(batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
     model = {"X": x, "Y": y, "args": model_args}
     model.update(build_infer_graph(model["X"],
                                    batch_size=batch_size,
-                                   vocab_size=VOCAB_SIZE,
+                                   vocab_size=vocab_size,
                                    embedding_size=embedding_size,
                                    rnn_size=rnn_size,
                                    num_layers=num_layers,
@@ -153,7 +159,7 @@ def load_inference_model(checkpoint_path):
     builds inference model from model args saved in `checkpoint_path`
     """
     # load model args
-    with open("{}.json".format(checkpoint_path)) as f:
+    with open("{}.json".format(checkpoint_path), encoding="utf-8") as f:
         model_args = json.load(f)
     # edit batch_size and p_keep
     model_args.update({"batch_size": 1, "p_keep": 1.0})
@@ -197,21 +203,22 @@ def train_main(args):
     trains model specfied in args.
     main method for train subcommand.
     """
-    # load text
-    with open(args.text_path) as f:
-        text = f.read()
-    logger.info("corpus length: %s.", len(text))
+    text_paths = list_training_text_files(args.text_path)
+    multi_corpus = len(text_paths) > 1
+    if multi_corpus:
+        logger.info("cycling %d text files per epoch (sorted): %s",
+                    len(text_paths), text_paths)
 
     # restore or build model
     if args.restore:
         load_path = args.checkpoint_path if args.restore is True else args.restore
-        with open("{}.json".format(args.checkpoint_path)) as f:
+        with open("{}.json".format(args.checkpoint_path), encoding="utf-8") as f:
             model_args = json.load(f)
         logger.info("model restored: %s.", load_path)
     else:
         load_path = None
         model_args = {"batch_size": args.batch_size,
-                      "vocab_size": VOCAB_SIZE,
+                      "vocab_size": utils.VOCAB_SIZE,
                       "embedding_size": args.embedding_size,
                       "rnn_size": args.rnn_size,
                       "num_layers": args.num_layers,
@@ -232,10 +239,10 @@ def train_main(args):
         else:
             train_sess.run(train_model["init_op"])
 
-        # clear checkpoint directory
-        log_dir = make_dirs(args.checkpoint_path, empty=True)
+        # clear checkpoint directory (fresh run only; keep files when resuming)
+        log_dir = make_dirs(args.checkpoint_path, empty=not args.restore)
         # save model
-        with open("{}.json".format(args.checkpoint_path), "w") as f:
+        with open("{}.json".format(args.checkpoint_path), "w", encoding="utf-8") as f:
             json.dump(train_model["args"], f, indent=2)
         checkpoint_path = train_model["saver"].save(train_sess, args.checkpoint_path)
         logger.info("model saved: %s.", checkpoint_path)
@@ -255,8 +262,6 @@ def train_main(args):
             inference_model = load_inference_model(args.checkpoint_path)
 
         # training start
-        num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
-        data_iter = batch_generator(encode_text(text), args.batch_size, args.seq_len)
         fetches = [train_model["train_op"], train_model["output_state"],
                    train_model["loss"], train_model["summary"]]
         state = train_sess.run(train_model["input_state"])
@@ -264,6 +269,13 @@ def train_main(args):
         time_train = time.time()
 
         for i in range(args.num_epochs):
+            path, text = corpus_for_training_epoch(text_paths, i)
+            logger.info("epoch %s/%s corpus: %s (%s chars).",
+                        i + 1, args.num_epochs, path, len(text))
+            if multi_corpus:
+                state = train_sess.run(train_model["input_state"])
+            num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
+            data_iter = batch_generator(encode_text(text), args.batch_size, args.seq_len)
             epoch_losses = np.empty(num_batches)
             time_epoch = time.time()
             # training epoch
@@ -295,6 +307,7 @@ def train_main(args):
         duration_train = time.time() - time_train
         logger.info("end of training, duration: %ds.", duration_train)
         # generate text
+        _, text = corpus_for_training_epoch(text_paths, args.num_epochs - 1)
         seed = generate_seed(text)
         with tf.Session(graph=inference_graph) as infer_sess:
             # restore weights
@@ -316,10 +329,11 @@ def generate_main(args):
 
     # create seed if not specified
     if args.seed is None:
-        with open(args.text_path) as f:
+        seed_path = resolve_seed_text_file(args.text_path)
+        with open(seed_path, encoding="utf-8") as f:
             text = f.read()
         seed = generate_seed(text)
-        logger.info("seed sequence generated from %s.", args.text_path)
+        logger.info("seed sequence generated from %s.", seed_path)
     else:
         seed = args.seed
 

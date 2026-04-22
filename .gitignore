@@ -1,10 +1,13 @@
 # python
 __pycache__/
 .pyc
+.venv/
 
 # ide
 .idea/
 
-# project
-checkpoints/
+# project (directory tracked via .gitkeep; ignore all other contents)
+checkpoints/*
+!checkpoints/.gitkeep
 main.log*
+data/wordnet_char_inventory.json

@@ -4,6 +4,7 @@ import time
 
 import numpy as np
 
+import utils
 import chainer
 from chainer import (functions as F,
                      links as L,
@@ -11,8 +12,9 @@ from chainer import (functions as F,
 from chainer.training import extension, extensions
 
 from logger import get_logger
-from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
-                   make_dirs, sample_from_probs, VOCAB_SIZE)
+from utils import (batch_generator, corpus_for_training_epoch, encode_text,
+                   generate_seed, ID2CHAR, list_training_text_files, main,
+                   make_dirs, resolve_seed_text_file, sample_from_probs)
 
 logger = get_logger(__name__)
 
@@ -21,9 +23,11 @@ class Network(ChainList):
     """
     build character embeddings LSTM neural network.
     """
-    def __init__(self, vocab_size=VOCAB_SIZE, embedding_size=32,
+    def __init__(self, vocab_size=None, embedding_size=32,
                  rnn_size=128, num_layers=2, drop_rate=0.0):
         super(Network, self).__init__()
+        if vocab_size is None:
+            vocab_size = utils.VOCAB_SIZE
         self.args = {"vocab_size": vocab_size, "embedding_size": embedding_size,
                      "rnn_size": rnn_size, "num_layers": num_layers,
                      "drop_rate": drop_rate}
@@ -75,7 +79,7 @@ def load_model(checkpoint_path):
     """
     loads model from checkpoint_path.
     """
-    with open("{}.json".format(checkpoint_path)) as f:
+    with open("{}.json".format(checkpoint_path), encoding="utf-8") as f:
         model_args = json.load(f)
     net = Network(**model_args)
     model = L.Classifier(net)
@@ -206,13 +210,11 @@ def train_main(args):
     trains model specfied in args.
     main method for train subcommand.
     """
-    # load text
-    with open(args.text_path) as f:
-        text = f.read()
-    logger.info("corpus length: %s.", len(text))
-
-    # data iterator
-    data_iter = DataIterator(text, args.batch_size, args.seq_len)
+    text_paths = list_training_text_files(args.text_path)
+    multi_corpus = len(text_paths) > 1
+    if multi_corpus:
+        logger.info("cycling %d text files per epoch (sorted): %s",
+                    len(text_paths), text_paths)
 
     # load or build model
     if args.restore:
@@ -220,7 +222,7 @@ def train_main(args):
         load_path = args.checkpoint_path if args.restore is True else args.restore
         model = load_model(load_path)
     else:
-        net = Network(vocab_size=VOCAB_SIZE,
+        net = Network(vocab_size=utils.VOCAB_SIZE,
                       embedding_size=args.embedding_size,
                       rnn_size=args.rnn_size,
                       num_layers=args.num_layers,
@@ -229,7 +231,7 @@ def train_main(args):
 
     # make checkpoint directory
     log_dir = make_dirs(args.checkpoint_path)
-    with open("{}.json".format(args.checkpoint_path), "w") as f:
+    with open("{}.json".format(args.checkpoint_path), "w", encoding="utf-8") as f:
         json.dump(model.predictor.args, f, indent=2)
     chainer.serializers.save_npz(args.checkpoint_path, model)
     logger.info("model saved: %s.", args.checkpoint_path)
@@ -240,25 +242,37 @@ def train_main(args):
     # clip gradient norm
     optimizer.add_hook(chainer.optimizer.GradientClipping(args.clip_norm))
 
-    # trainer
-    updater = BpttUpdater(data_iter, optimizer)
-    trainer = chainer.training.Trainer(updater, (args.num_epochs, 'epoch'), out=log_dir)
-    trainer.extend(extensions.snapshot_object(model, filename=os.path.basename(args.checkpoint_path)))
-    trainer.extend(extensions.ProgressBar(update_interval=1))
-    trainer.extend(extensions.LogReport())
-    trainer.extend(extensions.PlotReport(y_keys=["main/loss"]))
-    trainer.extend(LoggerExtension(text))
+    def _run_trainer(data_iter, text, num_epochs):
+        updater = BpttUpdater(data_iter, optimizer)
+        trainer = chainer.training.Trainer(updater, (num_epochs, 'epoch'), out=log_dir)
+        trainer.extend(extensions.snapshot_object(model, filename=os.path.basename(args.checkpoint_path)))
+        trainer.extend(extensions.ProgressBar(update_interval=1))
+        trainer.extend(extensions.LogReport())
+        trainer.extend(extensions.PlotReport(y_keys=["main/loss"]))
+        trainer.extend(LoggerExtension(text))
+        model.predictor.reset_state()
+        trainer.run()
 
-    # training start
-    model.predictor.reset_state()
     logger.info("start of training.")
     time_train = time.time()
-    trainer.run()
+    if not multi_corpus:
+        _, text = corpus_for_training_epoch(text_paths, 0)
+        logger.info("corpus length: %s.", len(text))
+        data_iter = DataIterator(text, args.batch_size, args.seq_len)
+        _run_trainer(data_iter, text, args.num_epochs)
+    else:
+        for i in range(args.num_epochs):
+            path, text = corpus_for_training_epoch(text_paths, i)
+            logger.info("epoch %s/%s corpus: %s (%s chars).",
+                        i + 1, args.num_epochs, path, len(text))
+            data_iter = DataIterator(text, args.batch_size, args.seq_len)
+            _run_trainer(data_iter, text, 1)
 
     # training end
     duration_train = time.time() - time_train
     logger.info("end of training, duration: %ds.", duration_train)
     # generate text
+    _, text = corpus_for_training_epoch(text_paths, args.num_epochs - 1)
     seed = generate_seed(text)
     generate_text(model, seed, 1024, 3)
     return model
@@ -274,10 +288,11 @@ def generate_main(args):
 
     # create seed if not specified
     if args.seed is None:
-        with open(args.text_path) as f:
+        seed_path = resolve_seed_text_file(args.text_path)
+        with open(seed_path, encoding="utf-8") as f:
             text = f.read()
         seed = generate_seed(text)
-        logger.info("seed sequence generated from %s.", args.text_path)
+        logger.info("seed sequence generated from %s.", seed_path)
     else:
         seed = args.seed
 

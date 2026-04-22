@@ -98,8 +98,8 @@ Example:
 
 ```bash
 python tf_model.py train \
-    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
-    --text=data/tinyshakespeare.txt
+    --checkpoint-path checkpoints/tf_tinyshakespeare/model.ckpt \
+    --text-path data/tinyshakespeare.txt
 ```
 
 Sample logs:
@@ -135,7 +135,7 @@ Example:
 
 ```bash
 python tf_model.py generate \
-    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
+    --checkpoint-path checkpoints/tf_tinyshakespeare/model.ckpt \
     --seed="KING RICHARD"
 ```
 
@@ -190,3 +190,56 @@ Below are training duration and loss on [`tinyshakespeare.txt`](data/tinyshakesp
 | PyTorch    | 5868         | 1.32285 | 
 | Chainer    | 4954         | 1.22930 | 
 | MXNet      | 7348         | 1.34199 | 
+
+## Windows setup without conda (pyenv-win, Python 3.7, venv)
+
+The original [`environment.yml`](environment.yml) targets **Python 3.7** and pip packages from roughly 2017–2019. Modern Python (3.12+) cannot install those stacks, so this workflow uses **[pyenv-win](https://github.com/pyenv-win/pyenv-win)** to install **Python 3.7.9**, a project **virtual environment** (no conda), and **[`requirements.txt`](requirements.txt)** for reproducible installs on **64-bit Windows**.
+
+### 1. Install pyenv-win
+
+From PowerShell, run the [official installer script](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md) (downloads into `%USERPROFILE%\.pyenv\pyenv-win`). Close and reopen the terminal so your user `PATH` includes pyenv’s `bin` and `shims` directories. If `pyenv` is still not found, ensure these entries exist on your user `PATH`:
+
+- `%USERPROFILE%\.pyenv\pyenv-win\bin`
+- `%USERPROFILE%\.pyenv\pyenv-win\shims`
+
+### 2. Install Python 3.7.9 and pin it for this repo
+
+```powershell
+pyenv install 3.7.9
+cd path\to\char-rnn-text-generation
+pyenv local 3.7.9
+```
+
+The repo includes [`.python-version`](.python-version) set to `3.7.9`, so pyenv-win selects that version automatically whenever you are in this directory.
+
+### 3. Create and use a virtual environment
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U "pip<24.1" setuptools wheel
+pip install -r requirements.txt
+```
+
+The `.venv` directory is listed in [`.gitignore`](.gitignore) so it is not committed.
+
+### 4. What `requirements.txt` installs (and how it differs from `environment.yml`)
+
+The file installs **NumPy**, **tqdm**, **h5py**, **PyTorch 1.1.0 CPU** (same cp37 wheel as in `environment.yml`), **TensorFlow**, **Keras**, **Chainer 3.0.0**, and **MXNet 0.12.0**, with pins chosen so everything works on **Python 3.7** and **Windows**.
+
+| `environment.yml` | `requirements.txt` / notes |
+|-------------------|-----------------------------|
+| `tensorflow==1.4.0` | **`tensorflow==1.15.0`** — TensorFlow 1.4 has no usable **cp37** Windows wheels; 1.15 is still TensorFlow 1.x and keeps `tf.contrib` used in [`tf_model.py`](tf_model.py). |
+| `keras==2.0.9` | **`Keras==2.2.5`** — aligned with TensorFlow 1.15; [`keras_model.py`](keras_model.py) imports successfully. |
+| `protobuf` (transitive) | **`protobuf>=3.8,<3.20`** — avoids protobuf 4.x, which breaks TensorFlow 1.15’s generated protobuf code with a “Descriptors cannot be created directly” error. |
+| CNTK wheel URL | **Not installed** — that wheel is **cp27** (Python 2.7 only), so it cannot run on Python 3. |
+
+After `pip install -r requirements.txt`, `pip check` should report no broken requirements. Importing `tf_model`, `keras_model`, `pytorch_model`, `chainer_model`, and `mxnet_model` should work.
+
+### 5. TensorFlow and GPU messages
+
+On a **CPU-only** machine, TensorFlow may log a warning about a missing CUDA DLL (for example `cudart64_100.dll`). That is expected if you are not using a GPU; training still runs on CPU.
+
+### 6. Original conda setup (unchanged)
+
+The conda-based instructions in [Setup](#setup) above remain valid if you prefer Anaconda and can satisfy `environment.yml` on your platform.

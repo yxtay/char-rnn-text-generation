@@ -1,0 +1,22 @@
+# Python 3.7.x (see .python-version). Use the project venv: python -m venv .venv
+#
+# Differs from environment.yml where needed for Windows + Python 3.7 wheels:
+# - tensorflow==1.15.0 instead of 1.4.0 (1.4 has no cp37 wheels; code uses tf 1.x contrib API)
+# - Keras==2.2.5 instead of 2.0.9 (matches TF 1.15; keras_model API unchanged)
+# - protobuf constrained for TF 1.15 (avoid protobuf 4.x import errors)
+# - CNTK: conda env pointed at a cp27-only wheel — not usable on Python 3; skip
+
+numpy>=1.16.0,<1.19.0
+tqdm==4.31.1
+h5py==2.10.0
+
+# CPU PyTorch 1.1 for cp37 (same as environment.yml URL)
+https://download.pytorch.org/whl/cpu/torch-1.1.0-cp37-cp37m-win_amd64.whl
+
+protobuf>=3.8.0,<3.20
+tensorflow==1.15.0
+Keras==2.2.5
+PyYAML>=5.1
+chainer==3.0.0
+mxnet==0.12.0
+nltk>=3.4,<3.9

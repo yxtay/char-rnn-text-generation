@@ -2,14 +2,16 @@ import time
 
 from tqdm import tqdm
 
+import utils
 import torch
 from torch import nn, optim
 from torch.autograd import Variable
 from torch.nn import functional as F
 
 from logger import get_logger
-from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
-                   make_dirs, VOCAB_SIZE)
+from utils import (batch_generator, corpus_for_training_epoch, encode_text,
+                   generate_seed, ID2CHAR, list_training_text_files, main,
+                   make_dirs, resolve_seed_text_file)
 
 logger = get_logger(__name__)
 
@@ -18,9 +20,11 @@ class Model(nn.Module):
     """
     build character embeddings LSTM text generation model.
     """
-    def __init__(self, vocab_size=VOCAB_SIZE, embedding_size=32,
+    def __init__(self, vocab_size=None, embedding_size=32,
                  rnn_size=128, num_layers=2, drop_rate=0.0):
         super(Model, self).__init__()
+        if vocab_size is None:
+            vocab_size = utils.VOCAB_SIZE
         self.args = {"vocab_size": vocab_size, "embedding_size": embedding_size,
                      "rnn_size": rnn_size, "num_layers": num_layers,
                      "drop_rate": drop_rate}
@@ -130,10 +134,11 @@ def train_main(args):
     trains model specfied in args.
     main method for train subcommand.
     """
-    # load text
-    with open(args.text_path) as f:
-        text = f.read()
-    logger.info("corpus length: %s.", len(text))
+    text_paths = list_training_text_files(args.text_path)
+    multi_corpus = len(text_paths) > 1
+    if multi_corpus:
+        logger.info("cycling %d text files per epoch (sorted): %s",
+                    len(text_paths), text_paths)
 
     # load or build model
     if args.restore:
@@ -141,7 +146,7 @@ def train_main(args):
         load_path = args.checkpoint_path if args.restore is True else args.restore
         model = Model.load(load_path)
     else:
-        model = Model(vocab_size=VOCAB_SIZE,
+        model = Model(vocab_size=utils.VOCAB_SIZE,
                       embedding_size=args.embedding_size,
                       rnn_size=args.rnn_size,
                       num_layers=args.num_layers,
@@ -156,13 +161,18 @@ def train_main(args):
     optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
 
     # training start
-    num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
-    data_iter = batch_generator(encode_text(text), args.batch_size, args.seq_len)
     state = model.init_state(args.batch_size)
     logger.info("start of training.")
     time_train = time.time()
 
     for i in range(args.num_epochs):
+        path, text = corpus_for_training_epoch(text_paths, i)
+        logger.info("epoch %s/%s corpus: %s (%s chars).",
+                    i + 1, args.num_epochs, path, len(text))
+        if multi_corpus:
+            state = model.init_state(args.batch_size)
+        num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
+        data_iter = batch_generator(encode_text(text), args.batch_size, args.seq_len)
         epoch_losses = torch.Tensor(num_batches)
         time_epoch = time.time()
         # training epoch
@@ -201,6 +211,7 @@ def train_main(args):
     duration_train = time.time() - time_train
     logger.info("end of training, duration: %ds.", duration_train)
     # generate text
+    _, text = corpus_for_training_epoch(text_paths, args.num_epochs - 1)
     seed = generate_seed(text)
     generate_text(model, seed, 1024, 3)
     return model
@@ -216,10 +227,11 @@ def generate_main(args):
 
     # create seed if not specified
     if args.seed is None:
-        with open(args.text_path) as f:
+        seed_path = resolve_seed_text_file(args.text_path)
+        with open(seed_path, encoding="utf-8") as f:
             text = f.read()
         seed = generate_seed(text)
-        logger.info("seed sequence generated from %s.", args.text_path)
+        logger.info("seed sequence generated from %s.", seed_path)
     else:
         seed = args.seed
 
