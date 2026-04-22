@@ -1,0 +1,14 @@
+# https://pre-commit.com
+# https://pre-commit.ci — requires this file at the repository root
+default_language_version:
+  python: python3
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-added-large-files
+        args: [--maxkb=20480]
