@@ -46,8 +46,7 @@ def path_join(*paths, empty=False):
 
 def dictionary_from_chars(chars):
     """
-    Build char2id, id2char and vocab_size from distinct characters.
-    Index 0 is reserved for unknown / padding (empty string key).
+    Build char2id, id2char and vocab_size. Index 0 is reserved for unknown/pad ("").
     """
     chars = sorted(set(chars) - {"\x0b", "\x0c", "\r"})
     char2id = dict((ch, i + 1) for i, ch in enumerate(chars))
@@ -70,11 +69,7 @@ CHAR2ID, ID2CHAR, VOCAB_SIZE = create_dictionary()
 
 
 def apply_wordnet_char_vocabulary():
-    """
-    Replace the character alphabet with one derived from WordNet lemma strings.
-    Mutates CHAR2ID and ID2CHAR in place so existing imports of those dicts stay
-    valid; updates VOCAB_SIZE (re-read via ``import utils`` / ``utils.VOCAB_SIZE``).
-    """
+    """Replace the character table using WordNet lemma inventory (mutates dicts in place)."""
     global VOCAB_SIZE
     from wordnet_lexicon import lemma_character_inventory
 
@@ -86,21 +81,70 @@ def apply_wordnet_char_vocabulary():
     VOCAB_SIZE = vs
 
 
-def encode_text(text, char2id=None):
+def id_to_char_list_from_globals():
+    """Ordered list: index ``i`` is the character for class id ``i`` (matches ``ID2CHAR``)."""
+    return [ID2CHAR[i] for i in range(VOCAB_SIZE)]
+
+
+def apply_id_to_char_table(table):
+    """
+    Rebind ``CHAR2ID`` / ``ID2CHAR`` / ``VOCAB_SIZE`` from a saved checkpoint table.
+    ``table[i]`` is the character for integer id ``i`` (id 0 is the unknown/pad slot).
+    """
+    global VOCAB_SIZE
+    table = list(table)
+    n = len(table)
+    if n < 1:
+        raise ValueError("id_to_char table is empty")
+    char2id_new = {}
+    for i, ch in enumerate(table):
+        if ch in char2id_new and char2id_new[ch] != i:
+            raise ValueError("duplicate character {!r} in id_to_char".format(ch))
+        char2id_new[ch] = i
+    id2char_new = {i: table[i] for i in range(n)}
+    CHAR2ID.clear()
+    CHAR2ID.update(char2id_new)
+    ID2CHAR.clear()
+    ID2CHAR.update(id2char_new)
+    VOCAB_SIZE = n
+
+
+def pop_vocab_metadata_from_model_args(model_args):
+    """
+    If ``model_args`` contains ``id_to_char`` (mutates dict: key removed), apply it.
+    Otherwise ensure ``model_args["vocab_size"]`` matches process ``VOCAB_SIZE``.
+    Updates ``model_args["vocab_size"]`` after applying a table.
+    """
+    table = model_args.pop("id_to_char", None)
+    expected = model_args.get("vocab_size")
+    if table is not None:
+        apply_id_to_char_table(table)
+        if expected is not None and expected != VOCAB_SIZE:
+            logger.warning(
+                "checkpoint vocab_size %s != id_to_char length %s; using table length",
+                expected, VOCAB_SIZE)
+        model_args["vocab_size"] = VOCAB_SIZE
+        return
+    if expected is not None and expected != VOCAB_SIZE:
+        raise ValueError(
+            "Checkpoint expects vocab_size %s but this process has %s. "
+            "If you trained with a custom alphabet (e.g. --wordnet-char-vocab), pass "
+            "the same flag when running generate, or use a checkpoint JSON that "
+            "includes an id_to_char list (re-save with an updated trainer)."
+            % (expected, VOCAB_SIZE))
+
+
+def encode_text(text, char2id=CHAR2ID):
     """
     encode text to array of integers with CHAR2ID
     """
-    if char2id is None:
-        char2id = CHAR2ID
     return np.fromiter((char2id.get(ch, 0) for ch in text), int)
 
 
-def decode_text(int_array, id2char=None):
+def decode_text(int_array, id2char=ID2CHAR):
     """
     decode array of integers to text with ID2CHAR
     """
-    if id2char is None:
-        id2char = ID2CHAR
     return "".join((id2char[ch] for ch in int_array))
 
 
@@ -278,8 +322,8 @@ def main(framework, train_main, generate_main):
     train_parser.add_argument("--log-path", default=os.path.join(os.path.dirname(__file__), "main.log"),
                               help="path of log file (default: %(default)s)")
     train_parser.add_argument("--wordnet-char-vocab", action="store_true",
-                              help="restrict alphabet to chars appearing in WordNet lemmas "
-                                   "(smaller softmax; requires NLTK + wordnet corpus)")
+                              help="use characters appearing in WordNet lemmas only "
+                                   "(smaller softmax; pip install nltk, first run downloads wordnet)")
     train_parser.set_defaults(main=train_main)
 
     # generate args
@@ -296,8 +340,7 @@ def main(framework, train_main, generate_main):
     generate_parser.add_argument("--log-path", default=os.path.join(os.path.dirname(__file__), "main.log"),
                                  help="path of log file (default: %(default)s)")
     generate_parser.add_argument("--wordnet-char-vocab", action="store_true",
-                                 help="use same WordNet-derived alphabet as training "
-                                      "(required if the checkpoint was trained with this flag)")
+                                 help="use WordNet-derived alphabet (only if checkpoint JSON has no id_to_char)")
     generate_parser.set_defaults(main=generate_main)
 
     args = arg_parser.parse_args()
@@ -305,7 +348,7 @@ def main(framework, train_main, generate_main):
     logger = get_logger(__name__, log_path=args.log_path, console=True)
     if getattr(args, "wordnet_char_vocab", False):
         apply_wordnet_char_vocabulary()
-        logger.info("WordNet-derived character vocabulary size: %s", VOCAB_SIZE)
+        logger.info("WordNet character vocabulary size: %s", VOCAB_SIZE)
     logger.debug("call: %s", " ".join(sys.argv))
     logger.debug("ArgumentParser: %s", args)
 

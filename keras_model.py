@@ -3,7 +3,6 @@ import time
 
 import numpy as np
 
-import utils
 from keras.callbacks import Callback, ModelCheckpoint, TensorBoard
 from keras.layers import Dense, Dropout, Embedding, LSTM, TimeDistributed
 from keras.models import load_model, Sequential
@@ -12,19 +11,18 @@ from keras.optimizers import Adam
 from logger import get_logger
 from utils import (batch_generator, corpus_for_training_epoch, encode_text,
                    generate_seed, ID2CHAR, list_training_text_files, main,
-                   make_dirs, resolve_seed_text_file, sample_from_probs)
+                   make_dirs, resolve_seed_text_file, sample_from_probs,
+                   VOCAB_SIZE)
 
 logger = get_logger(__name__)
 
 
-def build_model(batch_size, seq_len, vocab_size=None, embedding_size=32,
+def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
                 rnn_size=128, num_layers=2, drop_rate=0.0,
                 learning_rate=0.001, clip_norm=5.0):
     """
     build character embeddings LSTM text generation model.
     """
-    if vocab_size is None:
-        vocab_size = utils.VOCAB_SIZE
     logger.info("building model: batch_size=%s, seq_len=%s, vocab_size=%s, "
                 "embedding_size=%s, rnn_size=%s, num_layers=%s, drop_rate=%s, "
                 "learning_rate=%s, clip_norm=%s.",
@@ -158,7 +156,7 @@ def train_main(args):
     else:
         model = build_model(batch_size=args.batch_size,
                             seq_len=args.seq_len,
-                            vocab_size=utils.VOCAB_SIZE,
+                            vocab_size=VOCAB_SIZE,
                             embedding_size=args.embedding_size,
                             rnn_size=args.rnn_size,
                             num_layers=args.num_layers,

@@ -5,26 +5,25 @@ import time
 import numpy as np
 from tqdm import tqdm
 
-import utils
 import tensorflow as tf
 from tensorflow.contrib import layers, rnn
 from tensorflow.contrib.tensorboard.plugins import projector
 
 from logger import get_logger
 from utils import (batch_generator, corpus_for_training_epoch, encode_text,
-                   generate_seed, ID2CHAR, list_training_text_files, main,
-                   make_dirs, resolve_seed_text_file, sample_from_probs)
+                   generate_seed, id_to_char_list_from_globals, ID2CHAR,
+                   list_training_text_files, main, make_dirs,
+                   pop_vocab_metadata_from_model_args, resolve_seed_text_file,
+                   sample_from_probs, VOCAB_SIZE)
 
 logger = get_logger(__name__)
 
 
-def build_infer_graph(x, batch_size, vocab_size=None, embedding_size=32,
+def build_infer_graph(x, batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
                       rnn_size=128, num_layers=2, p_keep=1.0):
     """
     builds inference graph
     """
-    if vocab_size is None:
-        vocab_size = utils.VOCAB_SIZE
     infer_args = {"batch_size": batch_size, "vocab_size": vocab_size,
                   "embedding_size": embedding_size, "rnn_size": rnn_size,
                   "num_layers": num_layers, "p_keep": p_keep}
@@ -111,14 +110,12 @@ def build_train_graph(loss, learning_rate=0.001, clip_norm=5.0):
     return model
 
 
-def build_model(batch_size, vocab_size=None, embedding_size=32,
+def build_model(batch_size, vocab_size=VOCAB_SIZE, embedding_size=32,
                 rnn_size=128, num_layers=2, p_keep=1.0, learning_rate=0.001,
                 clip_norm=5.0, build_eval=True, build_train=True):
     """
     builds model end-to-end, including data placeholders and saver
     """
-    if vocab_size is None:
-        vocab_size = utils.VOCAB_SIZE
     model_args = {"batch_size": batch_size, "vocab_size": vocab_size,
                   "embedding_size": embedding_size, "rnn_size": rnn_size,
                   "num_layers": num_layers, "p_keep": p_keep,
@@ -161,6 +158,7 @@ def load_inference_model(checkpoint_path):
     # load model args
     with open("{}.json".format(checkpoint_path), encoding="utf-8") as f:
         model_args = json.load(f)
+    pop_vocab_metadata_from_model_args(model_args)
     # edit batch_size and p_keep
     model_args.update({"batch_size": 1, "p_keep": 1.0})
     infer_model = build_model(**model_args, build_eval=False, build_train=False)
@@ -214,11 +212,12 @@ def train_main(args):
         load_path = args.checkpoint_path if args.restore is True else args.restore
         with open("{}.json".format(args.checkpoint_path), encoding="utf-8") as f:
             model_args = json.load(f)
+        pop_vocab_metadata_from_model_args(model_args)
         logger.info("model restored: %s.", load_path)
     else:
         load_path = None
         model_args = {"batch_size": args.batch_size,
-                      "vocab_size": utils.VOCAB_SIZE,
+                      "vocab_size": VOCAB_SIZE,
                       "embedding_size": args.embedding_size,
                       "rnn_size": args.rnn_size,
                       "num_layers": args.num_layers,
@@ -243,7 +242,9 @@ def train_main(args):
         log_dir = make_dirs(args.checkpoint_path, empty=not args.restore)
         # save model
         with open("{}.json".format(args.checkpoint_path), "w", encoding="utf-8") as f:
-            json.dump(train_model["args"], f, indent=2)
+            payload = dict(train_model["args"])
+            payload["id_to_char"] = id_to_char_list_from_globals()
+            json.dump(payload, f, indent=2, ensure_ascii=False)
         checkpoint_path = train_model["saver"].save(train_sess, args.checkpoint_path)
         logger.info("model saved: %s.", checkpoint_path)
         # tensorboard logger

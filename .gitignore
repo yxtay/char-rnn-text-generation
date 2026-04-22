@@ -6,8 +6,7 @@ __pycache__/
 # ide
 .idea/
 
-# project (directory tracked via .gitkeep; ignore all other contents)
-checkpoints/*
-!checkpoints/.gitkeep
+# project
+checkpoints/
 main.log*
 data/wordnet_char_inventory.json

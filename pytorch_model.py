@@ -2,7 +2,6 @@ import time
 
 from tqdm import tqdm
 
-import utils
 import torch
 from torch import nn, optim
 from torch.autograd import Variable
@@ -11,7 +10,7 @@ from torch.nn import functional as F
 from logger import get_logger
 from utils import (batch_generator, corpus_for_training_epoch, encode_text,
                    generate_seed, ID2CHAR, list_training_text_files, main,
-                   make_dirs, resolve_seed_text_file)
+                   make_dirs, resolve_seed_text_file, VOCAB_SIZE)
 
 logger = get_logger(__name__)
 
@@ -20,11 +19,9 @@ class Model(nn.Module):
     """
     build character embeddings LSTM text generation model.
     """
-    def __init__(self, vocab_size=None, embedding_size=32,
+    def __init__(self, vocab_size=VOCAB_SIZE, embedding_size=32,
                  rnn_size=128, num_layers=2, drop_rate=0.0):
         super(Model, self).__init__()
-        if vocab_size is None:
-            vocab_size = utils.VOCAB_SIZE
         self.args = {"vocab_size": vocab_size, "embedding_size": embedding_size,
                      "rnn_size": rnn_size, "num_layers": num_layers,
                      "drop_rate": drop_rate}
@@ -146,7 +143,7 @@ def train_main(args):
         load_path = args.checkpoint_path if args.restore is True else args.restore
         model = Model.load(load_path)
     else:
-        model = Model(vocab_size=utils.VOCAB_SIZE,
+        model = Model(vocab_size=VOCAB_SIZE,
                       embedding_size=args.embedding_size,
                       rnn_size=args.rnn_size,
                       num_layers=args.num_layers,

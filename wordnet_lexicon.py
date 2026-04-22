@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-WordNet-backed lexicon utilities.
-
-This project is *character-level*: labels are characters, not words. WordNet is
-used only to derive which *characters* appear in English lemma strings (glosses
-and synset definitions are not used). That yields a smaller softmax than the
-default ``string.printable`` inventory, which can speed training slightly.
-"""
+"""Build a character alphabet from NLTK WordNet lemma strings (no gloss text)."""
 import json
 import os
 
@@ -18,7 +11,6 @@ def _data_path(name):
 
 
 def ensure_nltk_wordnet():
-    """Download the WordNet corpus via NLTK if missing."""
     import nltk
 
     try:
@@ -41,12 +33,8 @@ def _chars_from_wordnet():
 
 def lemma_character_inventory():
     """
-    Return a set of characters to use as the training alphabet.
-
-    Built from every character that appears in any WordNet lemma name (with
-    underscores treated as spaces). Digits, common punctuation used in lemmas,
-    and ASCII whitespace are always included. Results are cached under
-    ``data/wordnet_char_inventory.json`` after the first successful NLTK scan.
+    Characters appearing in WordNet lemma names. Cached under
+    ``data/wordnet_char_inventory.json``. Adds digits and common whitespace.
     """
     cache_path = _data_path(_CACHE_FILENAME)
     if os.path.isfile(cache_path):
@@ -66,20 +54,3 @@ def lemma_character_inventory():
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump({"chars": ordered, "source": "nltk.corpus.wordnet lemmas"}, f, ensure_ascii=False)
     return set(ordered)
-
-
-def wordnet_lemma_words():
-    """
-    Iterator over distinct WordNet lemma strings (underscores as spaces).
-    Useful if you later add word-level models; not used by the char-RNN trainers.
-    """
-    ensure_nltk_wordnet()
-    from nltk.corpus import wordnet as wn
-
-    seen = set()
-    for syn in wn.all_synsets():
-        for lem in syn.lemmas():
-            w = lem.name().replace("_", " ")
-            if w not in seen:
-                seen.add(w)
-                yield w
