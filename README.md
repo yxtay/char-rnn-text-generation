@@ -10,10 +10,6 @@ This repository attempts to replicate the models, with slight modifications, in 
 - Keras: [`keras_model.py`](keras_model.py)
 - TensorFlow: [`tf_model.py`](tf_model.py)
 - PyTorch: [`pytorch_model.py`](pytorch_model.py)
-- Chainer: [`chainer_model.py`](chainer_model.py)
-- MXNet: [`mxnet_model.py`](mxnet_model.py)
-- CNTK
-- Caffe
 
 ## Default Model Specification
 
@@ -41,11 +37,8 @@ This repository attempts to replicate the models, with slight modifications, in 
 # clone repo
 git clone git@github.com:yxtay/char-rnn-text-generation.git && cd char-rnn-text-generation
 
-# create conda environment
-conda env create -f=environment.yml
-
-# activate environment
-source activate dl
+# install dependencies with uv
+uv sync
 ```
 
 ## Usage
@@ -97,18 +90,10 @@ optional arguments:
 Example:
 
 ```bash
-python tf_model.py train \
-    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
-    --text=data/tinyshakespeare.txt
+uv run python tf_model.py train \
+    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt \
+    --text-path=data/tinyshakespeare.txt
 ```
-
-Sample logs:
-
-- [`keras_model.log`](logs/keras_model.log)
-- [`tf_model.log`](logs/tf_model.log)
-- [`pytorch_model.log`](logs/pytorch_model.log)
-- [`chainer_model.log`](logs/chainer_model.log)
-- [`mxnet_model.log`](logs/mxnet_model.log)
 
 ### Text Generation
 
@@ -134,59 +119,7 @@ optional arguments:
 Example:
 
 ```bash
-python tf_model.py generate \
-    --checkpoint=checkpoints/tf_tinyshakespeare/model.ckpt \
+uv run python tf_model.py generate \
+    --checkpoint-path=checkpoints/tf_tinyshakespeare/model.ckpt \
     --seed="KING RICHARD"
 ```
-
-Sample output:
-
-```
-KING RICHARDIIIIl II I tell thee,
-As I have no mark of his confection,
-The people so see my son.
-
-SEBASTIAN:
-I have men's man in the common to his sounds,
-And so she said of my soul, and to him,
-And too marry his sun their commanded
-As thou shalt be alone too means
-As he should to thy sensess so far to mark of
-these foul trust them fringer whom, there would he had
-As the word of merrous and subject.
-
-GLOUCESTER:
-A spack, a service the counsel son and here.
-What is a misin the wind and to the will
-And shall not streaks of this show into all heard.
-
-KING EDIN YORK:
-I will be suppet on himself tears as the sends.
-
-KING EDWARD IV:
-No looks and them, and while, a will, when this way.
-
-BAPTHIO:
-A mortain and me to the callant our souls
-And the changed and such of the son.
-
-CORIOLANUS:
-I will, so show me with the child to the could sheep
-To beseence, and shall so so should but hear
-Than him with her fair to be that soul,
-Whishe it is no meach of my lard and
-And this, and with my love and the senter'd with marked
-And her should
-```
-
-## Benchmarks
-
-Below are training duration and loss on [`tinyshakespeare.txt`](data/tinyshakespeare.txt).
-
-| Framework  | Duration (s) | Loss    |
-|------------|--------------|---------|
-| Keras      | 5270         | 1.42505 | 
-| TensorFlow | 3003         | 1.45795 | 
-| PyTorch    | 5868         | 1.32285 | 
-| Chainer    | 4954         | 1.22930 | 
-| MXNet      | 7348         | 1.34199 | 

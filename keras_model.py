@@ -3,6 +3,8 @@ import time
 
 import numpy as np
 
+import keras
+from keras import ops
 from keras.callbacks import Callback, ModelCheckpoint, TensorBoard
 from keras.layers import Dense, Dropout, Embedding, LSTM, TimeDistributed
 from keras.models import load_model, Sequential
@@ -29,8 +31,8 @@ def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
                 learning_rate, clip_norm)
     model = Sequential()
     # input shape: (batch_size, seq_len)
-    model.add(Embedding(vocab_size, embedding_size,
-                        batch_input_shape=(batch_size, seq_len)))
+    model.add(keras.layers.Input(batch_shape=(batch_size, seq_len)))
+    model.add(Embedding(vocab_size, embedding_size))
     model.add(Dropout(drop_rate))
     # shape: (batch_size, seq_len, embedding_size)
     for _ in range(num_layers):
@@ -40,7 +42,7 @@ def build_model(batch_size, seq_len, vocab_size=VOCAB_SIZE, embedding_size=32,
     model.add(TimeDistributed(Dense(vocab_size, activation="softmax")))
     # output shape: (batch_size, seq_len, vocab_size)
     optimizer = Adam(learning_rate, clipnorm=clip_norm)
-    model.compile(loss="categorical_crossentropy", optimizer=optimizer)
+    model.compile(loss="sparse_categorical_crossentropy", optimizer=optimizer)
     return model
 
 
@@ -51,11 +53,46 @@ def build_inference_model(model, batch_size=1, seq_len=1):
     """
     logger.info("building inference model.")
     config = model.get_config()
-    # edit batch_size and seq_len
-    config[0]["config"]["batch_input_shape"] = (batch_size, seq_len)
+    # In Keras 3, config structure might be different.
+    # A simpler way is to rebuild with different batch_size if possible,
+    # or just use the model as is if it's not stateful or if we can handle it.
+    # Given it's stateful, we need to rebuild.
+
+    # In Keras 3, the config structure has changed.
+    # It might be in layers or in build_config.
+    if "layers" in config:
+        for layer in config["layers"]:
+            if "config" in layer:
+                if "batch_input_shape" in layer["config"]:
+                    layer["config"]["batch_input_shape"] = (batch_size, seq_len)
+                if "batch_shape" in layer["config"]:
+                    layer["config"]["batch_shape"] = (batch_size, seq_len)
+
+            if "build_config" in layer and "input_shape" in layer["build_config"]:
+                input_shape = list(layer["build_config"]["input_shape"])
+                if len(input_shape) > 0:
+                    input_shape[0] = batch_size
+                layer["build_config"]["input_shape"] = tuple(input_shape)
+
+    if "build_input_shape" in config:
+        config["build_input_shape"] = (batch_size, seq_len)
+
     inference_model = Sequential.from_config(config)
     inference_model.trainable = False
     return inference_model
+
+
+def reset_model_states(model):
+    """
+    resets states of rnn layers in model.
+    """
+    # Use _layers to include InputLayer if it exists, although it won't have reset_states
+    # The main issue was model.reset_states() failing on Sequential in Keras 3.
+    # We iterate over all layers and call reset_states if they have it.
+    layers = getattr(model, "_layers", model.layers)
+    for layer in layers:
+        if hasattr(layer, "reset_states"):
+            layer.reset_states()
 
 
 def generate_text(model, seed, length=512, top_n=10):
@@ -67,19 +104,19 @@ def generate_text(model, seed, length=512, top_n=10):
     logger.info('generating with seed: "%s".', seed)
     generated = seed
     encoded = encode_text(seed)
-    model.reset_states()
+    reset_model_states(model)
 
     for idx in encoded[:-1]:
         x = np.array([[idx]])
         # input shape: (1, 1)
         # set internal states
-        model.predict(x)
+        model.predict(x, verbose=0)
 
     next_index = encoded[-1]
     for i in range(length):
         x = np.array([[next_index]])
         # input shape: (1, 1)
-        probs = model.predict(x)
+        probs = model.predict(x, verbose=0)
         # output shape: (1, 1, vocab_size)
         next_index = sample_from_probs(probs.squeeze(), top_n)
         # append to sequence
@@ -97,8 +134,8 @@ class LoggerCallback(Callback):
     def __init__(self, text, model):
         super(LoggerCallback, self).__init__()
         self.text = text
-        # build inference model using config from learning model
-        self.inference_model = build_inference_model(model)
+        self.text_model = model
+        self.inference_model = None
         self.time_train = self.time_epoch = time.time()
 
     def on_epoch_begin(self, epoch, logs=None):
@@ -108,6 +145,10 @@ class LoggerCallback(Callback):
         duration_epoch = time.time() - self.time_epoch
         logger.info("epoch: %s, duration: %ds, loss: %.6g.",
                     epoch, duration_epoch, logs["loss"])
+
+        if self.inference_model is None:
+            self.inference_model = build_inference_model(self.text_model)
+
         # transfer weights from learning model
         self.inference_model.set_weights(self.model.get_weights())
 
@@ -122,6 +163,10 @@ class LoggerCallback(Callback):
     def on_train_end(self, logs=None):
         duration_train = time.time() - self.time_train
         logger.info("end of training, duration: %ds.", duration_train)
+
+        if self.inference_model is None:
+            self.inference_model = build_inference_model(self.text_model)
+
         # transfer weights from learning model
         self.inference_model.set_weights(self.model.get_weights())
 
@@ -163,16 +208,17 @@ def train_main(args):
     # callbacks
     callbacks = [
         ModelCheckpoint(args.checkpoint_path, verbose=1, save_best_only=False),
-        TensorBoard(log_dir, write_graph=True, embeddings_freq=1,
-                    embeddings_metadata={"embedding_1": os.path.abspath(os.path.join("data", "id2char.tsv"))}),
+        TensorBoard(log_dir, write_graph=True),
         LoggerCallback(text, model)
     ]
 
     # training start
     num_batches = (len(text) - 1) // (args.batch_size * args.seq_len)
-    model.reset_states()
-    model.fit_generator(batch_generator(encode_text(text), args.batch_size, args.seq_len, one_hot_labels=True),
-                        num_batches, args.num_epochs, callbacks=callbacks)
+    reset_model_states(model)
+
+    # In Keras 3, fit can take a generator directly
+    model.fit(batch_generator(encode_text(text), args.batch_size, args.seq_len, one_hot_labels=False),
+              steps_per_epoch=num_batches, epochs=args.num_epochs, callbacks=callbacks)
     return model
 
 
