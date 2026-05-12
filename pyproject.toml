@@ -1,11 +1,12 @@
 [project]
 name = "char-rnn-text-generation"
 version = "0.1.0"
-description = "Add your description here"
+description = "Character-level RNN text generation models implemented in several deep learning frameworks."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "keras<4",
+    "loguru>=0.7.3",
     "numpy<3",
     "tensorboard>=2.20.0",
     "tensorflow<3",

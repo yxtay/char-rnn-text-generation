@@ -6,11 +6,9 @@ import torch
 from torch import nn, optim
 from torch.nn import functional as F
 
-from logger import get_logger
+from loguru import logger
 from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
                    make_dirs, VOCAB_SIZE)
-
-logger = get_logger(__name__)
 
 
 class Model(nn.Module):
@@ -67,7 +65,7 @@ class Model(nn.Module):
         checkpoint = {"args": self.args, "state_dict": self.state_dict()}
         with open(checkpoint_path, "wb") as f:
             torch.save(checkpoint, f)
-        logger.info("model saved: %s.", checkpoint_path)
+        logger.info("model saved: {}.", checkpoint_path)
 
     @classmethod
     def load(cls, checkpoint_path):
@@ -75,10 +73,10 @@ class Model(nn.Module):
         loads model from checkpoint_path.
         """
         with open(checkpoint_path, "rb") as f:
-            checkpoint = torch.load(f)
+            checkpoint = torch.load(f, weights_only=True)
         model = cls(**checkpoint["args"])
         model.load_state_dict(checkpoint["state_dict"])
-        logger.info("model loaded: %s.", checkpoint_path)
+        logger.info("model loaded: {}.", checkpoint_path)
         return model
 
 
@@ -98,8 +96,8 @@ def generate_text(model, seed, length=512, top_n=10):
     generates text of specified length from trained model
     with given seed character sequence.
     """
-    logger.info("generating %s characters from top %s choices.", length, top_n)
-    logger.info('generating with seed: "%s".', seed)
+    logger.info("generating {} characters from top {} choices.", length, top_n)
+    logger.info('generating with seed: "{}".', seed)
     generated = seed
     encoded = encode_text(seed)
     encoded = torch.from_numpy(encoded)
@@ -125,19 +123,19 @@ def generate_text(model, seed, length=512, top_n=10):
             # append to sequence
             generated += ID2CHAR[next_index.item()]
 
-    logger.info("generated text: \n%s\n", generated)
+    logger.info("generated text: \n{}\n", generated)
     return generated
 
 
 def train_main(args):
     """
-    trains model specfied in args.
+    trains model specified in args.
     main method for train subcommand.
     """
     # load text
     with open(args.text_path) as f:
         text = f.read()
-    logger.info("corpus length: %s.", len(text))
+    logger.info("corpus length: {}.", len(text))
 
     # load or build model
     if args.restore:
@@ -183,7 +181,7 @@ def train_main(args):
             model.train()
             model.zero_grad()
             # calculate loss
-            logits, state = model.forward(x, state)
+            logits, state = model(x, state)
             loss = criterion(logits, y.view(-1))
             epoch_losses[j] = loss.item()
             # calculate gradients
@@ -195,7 +193,7 @@ def train_main(args):
 
         # logs
         duration_epoch = time.time() - time_epoch
-        logger.info("epoch: %s, duration: %ds, loss: %.6g.",
+        logger.info("epoch: {}, duration: {}s, loss: {:.6g}.",
                     i + 1, duration_epoch, epoch_losses.mean())
         # checkpoint
         model.save(args.checkpoint_path)
@@ -205,7 +203,7 @@ def train_main(args):
 
     # training end
     duration_train = time.time() - time_train
-    logger.info("end of training, duration: %ds.", duration_train)
+    logger.info("end of training, duration: {}s.", duration_train)
     # generate text
     seed = generate_seed(text)
     generate_text(model, seed, 1024, 3)
@@ -225,7 +223,7 @@ def generate_main(args):
         with open(args.text_path) as f:
             text = f.read()
         seed = generate_seed(text)
-        logger.info("seed sequence generated from %s.", args.text_path)
+        logger.info("seed sequence generated from {}.", args.text_path)
     else:
         seed = args.seed
 
