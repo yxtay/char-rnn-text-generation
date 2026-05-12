@@ -1,0 +1,14 @@
+[project]
+name = "char-rnn-text-generation"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "keras<4",
+    "numpy<3",
+    "tensorboard>=2.20.0",
+    "tensorflow<3",
+    "torch<3",
+    "tqdm>=4.67.3",
+]

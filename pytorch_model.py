@@ -4,7 +4,6 @@ from tqdm import tqdm
 
 import torch
 from torch import nn, optim
-from torch.autograd import Variable
 from torch.nn import functional as F
 
 from logger import get_logger
@@ -47,7 +46,7 @@ class Model(nn.Module):
         logits, hidden = self.forward(input, hidden)
         # logits shape: [seq_len * batch_size, vocab_size]
         # hidden shape: [2, num_layers, batch_size, rnn_size]
-        probs = F.softmax(logits)
+        probs = F.softmax(logits, dim=-1)
         # shape: [seq_len * batch_size, vocab_size]
         probs = probs.view(input.size(0), input.size(1), probs.size(1))
         # output shape: [seq_len, batch_size, vocab_size]
@@ -57,8 +56,9 @@ class Model(nn.Module):
         """
         initialises rnn states.
         """
-        return (Variable(torch.zeros(self.args["num_layers"], batch_size, self.args["rnn_size"])),
-                Variable(torch.zeros(self.args["num_layers"], batch_size, self.args["rnn_size"])))
+        device = next(self.parameters()).device
+        return (torch.zeros(self.args["num_layers"], batch_size, self.args["rnn_size"]).to(device),
+                torch.zeros(self.args["num_layers"], batch_size, self.args["rnn_size"]).to(device))
 
     def save(self, checkpoint_path="model.ckpt"):
         """
@@ -88,7 +88,7 @@ def sample_from_probs(probs, top_n=10):
     """
     _, indices = torch.sort(probs)
     # set probabilities after top_n to 0
-    probs[indices.data[:-top_n]] = 0
+    probs[indices[:-top_n]] = 0
     sampled_index = torch.multinomial(probs, 1)
     return sampled_index
 
@@ -102,24 +102,28 @@ def generate_text(model, seed, length=512, top_n=10):
     logger.info('generating with seed: "%s".', seed)
     generated = seed
     encoded = encode_text(seed)
-    encoded = Variable(torch.from_numpy(encoded), volatile=True)
+    encoded = torch.from_numpy(encoded)
     model.eval()
 
-    x = encoded[:-1].unsqueeze(1)
-    # input shape: [seq_len, 1]
-    state = model.init_state()
-    # get rnn state due to seed sequence
-    _, state = model.predict(x, state)
+    device = next(model.parameters()).device
+    encoded = encoded.to(device)
 
-    next_index = encoded[-1:]
-    for i in range(length):
-        x = next_index.unsqueeze(1)
-        # input shape: [1, 1]
-        probs, state = model.predict(x, state)
-        # output shape: [1, 1, vocab_size]
-        next_index = sample_from_probs(probs.squeeze(), top_n)
-        # append to sequence
-        generated += ID2CHAR[next_index.data[0]]
+    with torch.no_grad():
+        x = encoded[:-1].unsqueeze(1)
+        # input shape: [seq_len, 1]
+        state = model.init_state()
+        # get rnn state due to seed sequence
+        _, state = model.predict(x, state)
+
+        next_index = encoded[-1:]
+        for i in range(length):
+            x = next_index.unsqueeze(1)
+            # input shape: [1, 1]
+            probs, state = model.predict(x, state)
+            # output shape: [1, 1, vocab_size]
+            next_index = sample_from_probs(probs.squeeze(), top_n)
+            # append to sequence
+            generated += ID2CHAR[next_index.item()]
 
     logger.info("generated text: \n%s\n", generated)
     return generated
@@ -162,28 +166,30 @@ def train_main(args):
     logger.info("start of training.")
     time_train = time.time()
 
+    device = next(model.parameters()).device
+
     for i in range(args.num_epochs):
-        epoch_losses = torch.Tensor(num_batches)
+        epoch_losses = torch.zeros(num_batches)
         time_epoch = time.time()
         # training epoch
         for j in tqdm(range(num_batches), desc="epoch {}/{}".format(i + 1, args.num_epochs)):
             # prepare inputs
-            x, y = next(data_iter)
-            x = Variable(torch.from_numpy(x)).t()
-            y = Variable(torch.from_numpy(y)).t().contiguous()
+            x_np, y_np = next(data_iter)
+            x = torch.from_numpy(x_np).t().to(device)
+            y = torch.from_numpy(y_np).t().contiguous().to(device)
             # reset state variables to remove their history
-            state = tuple([Variable(var.data) for var in state])
+            state = tuple([var.detach() for var in state])
             # prepare model
             model.train()
             model.zero_grad()
             # calculate loss
             logits, state = model.forward(x, state)
             loss = criterion(logits, y.view(-1))
-            epoch_losses[j] = loss.data[0]
+            epoch_losses[j] = loss.item()
             # calculate gradients
             loss.backward()
             # clip gradient norm
-            nn.utils.clip_grad_norm(model.parameters(), args.clip_norm)
+            nn.utils.clip_grad_norm_(model.parameters(), args.clip_norm)
             # apply gradient update
             optimizer.step()
 
