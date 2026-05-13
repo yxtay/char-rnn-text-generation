@@ -53,13 +53,13 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "keras", specifier = "<4" },
-    { name = "loguru", specifier = ">=0.7.3" },
-    { name = "numpy", specifier = "<3" },
-    { name = "tensorboard", specifier = ">=2.20.0" },
-    { name = "tensorflow", specifier = "<3" },
-    { name = "torch", specifier = "<3" },
-    { name = "tqdm", specifier = ">=4.67.3" },
+    { name = "keras", specifier = "~=3.0" },
+    { name = "loguru", specifier = "~=0.7.3" },
+    { name = "numpy", specifier = "~=2.0" },
+    { name = "tensorboard", specifier = "~=2.20" },
+    { name = "tensorflow", specifier = "~=2.0" },
+    { name = "torch", specifier = "~=2.0" },
+    { name = "tqdm", specifier = "~=4.67" },
 ]
 
 [[package]]
