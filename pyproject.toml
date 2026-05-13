@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "keras~=3.0",
-    "loguru~=0.7.3",
+    "loguru>=0.7,<1.0",
     "numpy~=2.0",
     "tensorboard~=2.20",
     "tensorflow~=2.0",
