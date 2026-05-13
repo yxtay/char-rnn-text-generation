@@ -54,7 +54,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "keras", specifier = "~=3.0" },
-    { name = "loguru", specifier = "~=0.7.3" },
+    { name = "loguru", specifier = ">=0.7,<1.0" },
     { name = "numpy", specifier = "~=2.0" },
     { name = "tensorboard", specifier = "~=2.20" },
     { name = "tensorflow", specifier = "~=2.0" },
