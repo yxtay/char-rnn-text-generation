@@ -7,11 +7,9 @@ from tqdm import tqdm
 
 import tensorflow as tf
 
-from logger import get_logger
+from loguru import logger
 from utils import (batch_generator, encode_text, generate_seed, ID2CHAR, main,
                    make_dirs, sample_from_probs, VOCAB_SIZE)
-
-logger = get_logger(__name__)
 
 
 class CharRNN(tf.keras.Model):
@@ -47,8 +45,8 @@ def generate_text(model, seed, length=512, top_n=10):
     generates text of specified length from trained model
     with given seed character sequence.
     """
-    logger.info("generating %s characters from top %s choices.", length, top_n)
-    logger.info('generating with seed: "%s".', seed)
+    logger.info("generating {} characters from top {} choices.", length, top_n)
+    logger.info('generating with seed: "{}".', seed)
     generated = seed
     encoded = encode_text(seed)
 
@@ -69,7 +67,7 @@ def generate_text(model, seed, length=512, top_n=10):
         # append to sequence
         generated += ID2CHAR[next_index]
 
-    logger.info("generated text: \n%s\n", generated)
+    logger.info("generated text: \n{}\n", generated)
     return generated
 
 
@@ -81,7 +79,7 @@ def train_main(args):
     # load text
     with open(args.text_path) as f:
         text = f.read()
-    logger.info("corpus length: %s.", len(text))
+    logger.info("corpus length: {}.", len(text))
 
     # restore or build model
     if args.restore:
@@ -90,9 +88,9 @@ def train_main(args):
             model_args = json.load(f)
         model = CharRNN(**model_args)
         # Call model once to build it
-        model(np.zeros((1, 1)))
+        model(np.zeros((1, 1), dtype=np.int32))
         model.load_weights(load_path)
-        logger.info("model restored: %s.", load_path)
+        logger.info("model restored: {}.", load_path)
     else:
         model_args = {"vocab_size": VOCAB_SIZE,
                       "embedding_size": args.embedding_size,
@@ -137,7 +135,7 @@ def train_main(args):
 
         # logs
         duration_epoch = time.time() - time_epoch
-        logger.info("epoch: %s, duration: %ds, loss: %.6g.",
+        logger.info("epoch: {}, duration: {}s, loss: {:.6g}.",
                     i + 1, duration_epoch, np.mean(epoch_losses))
 
         # checkpoint
@@ -145,7 +143,7 @@ def train_main(args):
         if not save_path.endswith(".weights.h5"):
             save_path += ".weights.h5"
         model.save_weights(save_path)
-        logger.info("model saved: %s.", save_path)
+        logger.info("model saved: {}.", save_path)
 
         # generate text
         seed = generate_seed(text)
@@ -153,7 +151,7 @@ def train_main(args):
 
     # training end
     duration_train = time.time() - time_train
-    logger.info("end of training, duration: %ds.", duration_train)
+    logger.info("end of training, duration: {}s.", duration_train)
     # generate text
     seed = generate_seed(text)
     generate_text(model, seed, 1024, 3)
@@ -170,21 +168,21 @@ def generate_main(args):
         model_args = json.load(f)
     model = CharRNN(**model_args)
     # Call model once to build it
-    model(np.zeros((1, 1)))
+    model(np.zeros((1, 1), dtype=np.int32))
 
     load_path = args.checkpoint_path
     if not os.path.exists(load_path) and os.path.exists(load_path + ".weights.h5"):
         load_path += ".weights.h5"
 
     model.load_weights(load_path)
-    logger.info("model loaded: %s.", load_path)
+    logger.info("model loaded: {}.", load_path)
 
     # create seed if not specified
     if args.seed is None:
         with open(args.text_path) as f:
             text = f.read()
         seed = generate_seed(text)
-        logger.info("seed sequence generated from %s.", args.text_path)
+        logger.info("seed sequence generated from {}.", args.text_path)
     else:
         seed = args.seed
 

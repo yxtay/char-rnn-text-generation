@@ -6,9 +6,7 @@ import sys
 
 import numpy as np
 
-from logger import get_logger
-
-logger = get_logger(__name__)
+from loguru import logger
 
 ###
 # file system
@@ -90,19 +88,19 @@ def batch_generator(sequence, batch_size=64, seq_len=64, one_hot_features=False,
     num_batches = (len(sequence) - 1) // (batch_size * seq_len)
     if num_batches == 0:
         raise ValueError("No batches created. Use smaller batch size or sequence length.")
-    logger.info("number of batches: %s.", num_batches)
+    logger.info("number of batches: {}.", num_batches)
     rounded_len = num_batches * batch_size * seq_len
-    logger.info("effective text length: %s.", rounded_len)
+    logger.info("effective text length: {}.", rounded_len)
 
     x = np.reshape(sequence[: rounded_len], [batch_size, num_batches * seq_len])
     if one_hot_features:
         x = one_hot_encode(x, VOCAB_SIZE)
-    logger.info("x shape: %s.", x.shape)
+    logger.info("x shape: {}.", x.shape)
 
     y = np.reshape(sequence[1: rounded_len + 1], [batch_size, num_batches * seq_len])
     if one_hot_labels:
         y = one_hot_encode(y, VOCAB_SIZE)
-    logger.info("y shape: %s.", y.shape)
+    logger.info("y shape: {}.", y.shape)
 
     epoch = 0
     while True:
@@ -200,12 +198,11 @@ def main(framework, train_main, generate_main):
     generate_parser.set_defaults(main=generate_main)
 
     args = arg_parser.parse_args()
-    get_logger("__main__", log_path=args.log_path, console=True)
-    logger = get_logger(__name__, log_path=args.log_path, console=True)
-    logger.debug("call: %s", " ".join(sys.argv))
-    logger.debug("ArgumentParser: %s", args)
+    logger.add(args.log_path, rotation="1 MB", retention=1, level="DEBUG")
+    logger.debug("call: {}", " ".join(sys.argv))
+    logger.debug("ArgumentParser: {}", args)
 
     try:
         args.main(args)
     except Exception as e:
-        logger.exception(e)
+        logger.exception("Unhandled exception")
