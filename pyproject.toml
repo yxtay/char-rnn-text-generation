@@ -10,6 +10,6 @@ dependencies = [
     "numpy~=2.0",
     "tensorboard~=2.20",
     "tensorflow~=2.0",
-    "torch~=2.0",
+    "torch~=2.13",
     "tqdm~=4.67",
 ]
