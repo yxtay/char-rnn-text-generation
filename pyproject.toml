@@ -5,7 +5,7 @@ description = "Character-level RNN text generation models implemented in several
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "keras~=3.0",
+    "keras~=3.15",
     "loguru>=0.7,<1.0",
     "numpy~=2.0",
     "tensorboard~=2.20",
